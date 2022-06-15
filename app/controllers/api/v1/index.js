@@ -1,5 +1,5 @@
-const post = require("./post");
+const categoryController = require("./categoryController");
 
 module.exports = {
-	post,
+	categoryController,
 };

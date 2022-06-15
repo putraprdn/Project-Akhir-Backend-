@@ -7,26 +7,10 @@ const apiRouter = express.Router();
 /** Mount GET / handler */
 appRouter.get("/", controllers.main.index);
 
-/**
- * TODO: Implement your own API
- *       implementations
- */
-apiRouter.get("/api/v1/posts", controllers.api.v1.post.list);
-apiRouter.post("/api/v1/posts", controllers.api.v1.post.create);
-apiRouter.put(
-  "/api/v1/posts/:id",
-  controllers.api.v1.post.setPost,
-  controllers.api.v1.post.update
-);
-apiRouter.get(
-  "/api/v1/posts/:id",
-  controllers.api.v1.post.setPost,
-  controllers.api.v1.post.show
-);
-apiRouter.delete(
-  "/api/v1/posts/:id",
-  controllers.api.v1.post.setPost,
-  controllers.api.v1.post.destroy
-);
+appRouter.get("/category/list", controllers.api.v1.categoryController.list)
+appRouter.get("/category/list/:id", controllers.api.v1.categoryController.findById)
+appRouter.post("/category/create", controllers.api.v1.categoryController.create)
+appRouter.put("/category/update", controllers.api.v1.categoryController.update)
+appRouter.delete("/category/delete/:id", controllers.api.v1.categoryController.destroy)
 
 module.exports = appRouter;
