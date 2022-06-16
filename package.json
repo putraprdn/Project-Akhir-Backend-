@@ -1,10 +1,10 @@
 {
-  "name": "binar-sme-chapter-06-topic-01-design-pattern-mvc",
+  "name": "secondhand-fsw-10-kel-3",
   "version": "1.0.0",
   "main": "app/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "bin/www",
+    "start": "node bin/www",
     "develop": "nodemon -q bin/www",
     "db:create": "./node_modules/.bin/sequelize-cli db:create",
     "db:drop": "./node_modules/.bin/sequelize-cli db:drop",
@@ -13,6 +13,9 @@
     "db:seed": "./node_modules/.bin/sequelize-cli db:seed:all"
   },
   "dependencies": {
+    "body-parser": "^1.20.0",
+    "cors": "^2.8.5",
+    "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "morgan": "^1.10.0",
