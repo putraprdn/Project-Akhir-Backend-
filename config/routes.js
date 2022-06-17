@@ -5,7 +5,7 @@ const appRouter = express.Router();
 const apiRouter = express.Router();
 
 /** Mount GET / handler */
-appRouter.get("/", controllers.main.index);
+// appRouter.get("/", controllers.main.index);
 
 appRouter.get("/category/list", controllers.api.v1.categoryController.list)
 appRouter.get("/category/list/:id", controllers.api.v1.categoryController.findById)
@@ -17,38 +17,33 @@ appRouter.delete("/category/delete/:id", controllers.api.v1.categoryController.d
  */
 
 // Product List
-apiRouter.get("/api/v1/products", controllers.api.v1.product.list);
+appRouter.get("/v1/products", controllers.api.v1.productController.list);
 // Show a product by id
-apiRouter.get(
-  "/api/v1/products/:id",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.show
+appRouter.get(
+  "/v1/products/:id",
+  controllers.api.v1.productController.findById
 );
 // Show a product by name
-apiRouter.get(
-  "/api/v1/products/name/:name",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.showByName
+appRouter.get(
+  "/v1/products/name/:name",
+  controllers.api.v1.productController.findByName
 );
 // Show a product by category
-apiRouter.get(
-  "/api/v1/products/category/:categoryId",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.showByCategory
+appRouter.get(
+  "/v1/products/category/:categoryId",
+  controllers.api.v1.productController.findByCategory
 );
 // Create a new product
-apiRouter.post("/api/v1/products", controllers.api.v1.product.create);
+appRouter.post("/v1/products", controllers.api.v1.productController.create);
 // Update a product
-apiRouter.put(
-  "/api/v1/products/:id",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.update
+appRouter.put(
+  "/v1/products/:id",
+  controllers.api.v1.productController.update
 );
 // Delete a product
-apiRouter.delete(
-  "/api/v1/products/:id",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.destroy
+appRouter.delete(
+  "/v1/products/:id",
+  controllers.api.v1.productController.destroy
 );
 
 /**
