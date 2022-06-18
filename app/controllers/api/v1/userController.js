@@ -1,7 +1,6 @@
 const model = require("../../../models");
 
 const { genSalt, hash, compareSync } = require("bcrypt");
-// const jwt = require("jsonwebtoken");
 const cryptPassword = async (password) => {
 	const salt = await genSalt(12);
 	return hash(password, salt);
@@ -37,8 +36,8 @@ module.exports = {
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error,
-				message: error.message,
+				error: error.code,
+				message: error,
 				data: null,
 			});
 		}
@@ -49,6 +48,7 @@ module.exports = {
 		try {
 			const errorMessage =
 				"You have entered an invalid username or password";
+
 			// check if email registered in database
 			const isEmailExist = await model.user.findOne({
 				where: {
@@ -72,8 +72,8 @@ module.exports = {
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error,
-				message: error.message,
+				error: error.code,
+				message: error,
 				data: null,
 			});
 		}
@@ -108,10 +108,10 @@ module.exports = {
 
 			// get user so it can be called in return (data:user)
 			const user = await model.user.findOne({
-				where:{
+				where: {
 					id: isUserExist.id,
-				}
-			})
+				},
+			});
 
 			return res.status(200).json({
 				success: true,
@@ -122,8 +122,8 @@ module.exports = {
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error,
-				message: error.message,
+				error: error.code,
+				message: error,
 				data: null,
 			});
 		}
@@ -155,8 +155,8 @@ module.exports = {
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error,
-				message: error.message,
+				error: error.code,
+				message: error,
 				data: null,
 			});
 		}
