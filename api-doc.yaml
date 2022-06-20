@@ -117,9 +117,8 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-            # Blm pake jwt
-            # security:
-            #     - bearerAuth: []
+            security:
+                - bearerAuth: []
 
     /user/delete/{userId}:
         delete:
@@ -154,9 +153,8 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-            # Blm pake jwt
-            # security:
-            #     - bearerAuth: []
+            security:
+                - bearerAuth: []
 
     # --- CATEGORY
     /category/list:
@@ -514,7 +512,7 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
-    
+
     # blm dites
     /product/delete/{productId}:
         delete:
@@ -669,12 +667,12 @@ definitions:
                     success:
                         type: "boolean"
                         default: false
-                    # error:
-                    #     type: "object"
-                    #     default: {}
-                    message:
+                    error:
                         type: "object"
                         default: {}
+                    message:
+                        type: "string"
+                        # default: {}
                     data:
                         type: "boolean"
                         default: null

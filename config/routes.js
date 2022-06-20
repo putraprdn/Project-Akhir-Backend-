@@ -1,5 +1,6 @@
 const express = require("express");
 const controllers = require("../app/controllers");
+const middlewares = require("../app/middleware");
 
 // Some dependencies for api documenations
 const YAML = require("yamljs");
@@ -10,7 +11,8 @@ const apiDocs = YAML.load("./api-doc.yaml");
 const apiRouter = express.Router();
 
 /**
- * api documentation endpoint using swagger ui
+ * API DOCUMENTATION
+ * using Swagger UI
  */
 apiRouter.use("/api/documentation", swaggerUI.serve, swaggerUI.setup(apiDocs));
 
@@ -72,15 +74,19 @@ apiRouter.delete(
 /**
  * USER API
  */
-
 apiRouter.post(
 	"/api/user/register",
 	controllers.api.v1.userController.register
 );
 apiRouter.post("/api/user/login", controllers.api.v1.userController.login);
-apiRouter.put("/api/user/update/:id", controllers.api.v1.userController.update);
+apiRouter.put(
+	"/api/user/update/:id",
+	middlewares.checkToken,
+	controllers.api.v1.userController.update
+);
 apiRouter.delete(
 	"/api/user/delete/:id",
+	middlewares.checkToken,
 	controllers.api.v1.userController.destroy
 );
 

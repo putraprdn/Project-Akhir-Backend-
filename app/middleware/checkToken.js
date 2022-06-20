@@ -24,7 +24,7 @@ const checkToken = (req, res, next) => {
 			return res.status(403).json({
 				success: false,
 				error: 403,
-				message: "unauthorized",
+				message: "Unauthorized",
 				data: null,
 			});
 		}
