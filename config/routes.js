@@ -29,7 +29,7 @@ apiRouter.post(
 	controllers.api.v1.categoryController.create
 );
 apiRouter.put(
-	"/api/category/update",
+	"/api/category/update/:id",
 	controllers.api.v1.categoryController.update
 );
 apiRouter.delete(

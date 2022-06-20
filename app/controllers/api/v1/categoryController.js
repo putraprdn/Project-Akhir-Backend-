@@ -4,7 +4,10 @@ module.exports = {
 	// add data category
 	create: async (req, res) => {
 		try {
-			const data = await model.category.create(req.body);
+			const data = await model.category.create({
+				name: req.body.name,
+				description: req.body.description,	
+			});
 
 			return res.status(200).json({
 				success: true,
@@ -27,10 +30,20 @@ module.exports = {
 		try {
 			const datas = await model.category.findAll();
 
+			// if data empty
+			if (datas < 1) {
+				return res.status(200).json({
+					success: true,
+					error: 0,
+					message: "data empty",
+					data: datas,
+				});
+			}
+
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success listed",
+				message: "data listed",
 				data: datas,
 			});
 		} catch (error) {
@@ -52,6 +65,15 @@ module.exports = {
 				},
 			});
 
+			// if id not found
+			if (!data) {
+				return res.status(404).json({
+					success: false,
+					message: "data not found",
+					data: data,
+				});
+			}
+
 			return res.status(200).json({
 				success: true,
 				error: 0,
@@ -71,22 +93,29 @@ module.exports = {
 	// update data
 	update: async (req, res) => {
 		try {
-			const data = await model.category.update(
-				{
-					name: req.body.name,
-					description: req.body.description,
+			const data = await model.category.update({
+				name: req.body.name,
+				description: req.body.description,
+			},
+			{
+				where: {
+					id: req.params.id,
 				},
-				{
-					where: {
-						id: req.body.id,
-					},
-				}
-			);
+			});
+
+			// if id not found
+			if (data < 1) {
+				return res.status(404).json({
+					success: false,
+					message: "data not found",
+					data: null,
+				});
+			}
 
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success update",
+				message: "data success updated",
 				data: data,
 			});
 		} catch (error) {
@@ -108,10 +137,19 @@ module.exports = {
 				},
 			});
 
+			// if id not found
+			if (!data) {
+				return res.status(404).json({
+					success: false,
+					message: "data not found",
+					data: null,
+				});
+			}
+
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success delete",
+				message: "data success deleted",
 				data: data,
 			});
 		} catch (error) {
