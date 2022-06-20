@@ -1,5 +1,5 @@
 const model = require("../../../models");
-
+const jwt = require("jsonwebtoken");
 const { genSalt, hash, compareSync } = require("bcrypt");
 const cryptPassword = async (password) => {
 	const salt = await genSalt(12);
@@ -36,8 +36,8 @@ module.exports = {
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -61,19 +61,30 @@ module.exports = {
 			const user = isEmailExist;
 
 			if (compareSync(req.body.password, user.password)) {
+				const token = jwt.sign(
+					{
+						id: user.id,
+						name: user.name,
+						email: user.email,
+					},
+					process.env.ACCESS_TOKEN_SECRET,
+					{ expiresIn: "2h" }
+				);
+
 				return res.status(200).json({
 					success: true,
 					error: 0,
 					message: "Login successful",
 					data: user,
+					token,
 				});
 			}
 			throw new Error(errorMessage);
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -90,6 +101,10 @@ module.exports = {
 
 			// check if id exists in database
 			if (!isUserExist) throw new Error("User doesn't exist!");
+
+			// check if token's payload is the same user
+			if (res.locals.user.id != req.params.id)
+				throw new Error("Unauthorized access");
 
 			await model.user.update(
 				{
@@ -122,8 +137,8 @@ module.exports = {
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -141,7 +156,11 @@ module.exports = {
 			// check if id exist in database
 			if (!isUserExist) throw new Error("User doesn't exist!");
 
-			const user = model.user.destroy({
+			// check if token's payload is the same user
+			if (res.locals.user.id != req.params.id)
+				throw new Error("Unauthorized access");
+
+			await model.user.destroy({
 				where: {
 					id: req.params.id,
 				},
@@ -155,8 +174,8 @@ module.exports = {
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}

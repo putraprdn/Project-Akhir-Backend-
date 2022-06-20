@@ -81,3 +81,6 @@ typings/
 # Lock file
 package-lock.json
 yarn.lock
+
+# env configuration
+.env
