@@ -15,8 +15,8 @@ module.exports = {
 		} catch (error) {
 			res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -34,8 +34,8 @@ module.exports = {
 		} catch (error) {
 			res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -57,8 +57,8 @@ module.exports = {
 		} catch (error) {
 			res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -73,7 +73,7 @@ module.exports = {
 			});
 
 			// if product return empty array throw an error
-			if(product.length < 1) throw new Error("NOT FOUND") // change the error message
+			if (product.length < 1) throw new Error("NOT FOUND"); // change the error message
 
 			res.status(200).json({
 				success: true,
@@ -84,8 +84,8 @@ module.exports = {
 		} catch (error) {
 			res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -103,8 +103,8 @@ module.exports = {
 		} catch (error) {
 			res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -126,8 +126,8 @@ module.exports = {
 		} catch (error) {
 			res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
@@ -149,8 +149,8 @@ module.exports = {
 		} catch (error) {
 			res.status(500).json({
 				success: false,
-				error: error.code,
-				message: error,
+				error: error,
+				message: error.message,
 				data: null,
 			});
 		}
