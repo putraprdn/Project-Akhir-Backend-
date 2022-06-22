@@ -6,7 +6,7 @@ module.exports = {
 		try {
 			const data = await model.category.create({
 				name: req.body.name,
-				description: req.body.description,	
+				description: req.body.description,
 			});
 
 			return res.status(200).json({
@@ -31,14 +31,7 @@ module.exports = {
 			const datas = await model.category.findAll();
 
 			// if data empty
-			if (datas < 1) {
-				return res.status(200).json({
-					success: true,
-					error: 0,
-					message: "data empty",
-					data: datas,
-				});
-			}
+			if (datas < 1) throw new Error("data empty");
 
 			return res.status(200).json({
 				success: true,
@@ -66,13 +59,7 @@ module.exports = {
 			});
 
 			// if id not found
-			if (!data) {
-				return res.status(404).json({
-					success: false,
-					message: "data not found",
-					data: data,
-				});
-			}
+			if (!data) throw new Error("data not found");
 
 			return res.status(200).json({
 				success: true,
@@ -93,24 +80,24 @@ module.exports = {
 	// update data
 	update: async (req, res) => {
 		try {
-			const data = await model.category.update({
-				name: req.body.name,
-				description: req.body.description,
-			},
-			{
-				where: {
-					id: req.params.id,
+			let data = await model.category.update(
+				{
+					name: req.body.name,
+					description: req.body.description,
 				},
-			});
+				{
+					where: {
+						id: req.params.id,
+					},
+				}
+			);
 
 			// if id not found
-			if (data < 1) {
-				return res.status(404).json({
-					success: false,
-					message: "data not found",
-					data: null,
-				});
-			}
+			if (data < 1) throw new Error("data not found");
+
+			data = await model.category.findOne({
+				where: { id: req.params.id },
+			});
 
 			return res.status(200).json({
 				success: true,
@@ -138,13 +125,7 @@ module.exports = {
 			});
 
 			// if id not found
-			if (!data) {
-				return res.status(404).json({
-					success: false,
-					message: "data not found",
-					data: null,
-				});
-			}
+			if (!data) throw new Error("data not found");
 
 			return res.status(200).json({
 				success: true,
