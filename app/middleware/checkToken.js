@@ -1,44 +1,45 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
+// require("dotenv").config();
 
 const checkToken = (req, res, next) => {
-  let token = req.headers.authorization
+	let token = req.headers.authorization;
 
-  if (!token) {
-    return res.status(403).json({
-        "success" : false,
-        "error" : 403,
-        "message" : 'please provide a token',
-        "data" : null
-    })
-  }
+	if (!token) {
+		return res.status(403).json({
+			success: false,
+			error: 403,
+			message: "please provide a token",
+			data: null,
+		});
+	}
 
-  if (token.toLowerCase().startsWith('bearer')) {
-    token = token.slice('bearer'.length).trim()
-  }
+	if (token.toLowerCase().startsWith("bearer")) {
+		token = token.slice("bearer".length).trim();
+	}
 
-  try {
-    const jwtPayload = jwt.verify(token, 'password!23')
+	try {
+		const jwtPayload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    if (!jwtPayload) { 
-        return res.status(403).json({
-            "success" : false,
-            "error" : 403,
-            "message" : 'unauthorized',
-            "data" : null
-        })
-    }
+		if (!jwtPayload) {
+			return res.status(403).json({
+				success: false,
+				error: 403,
+				message: "Unauthorized",
+				data: null,
+			});
+		}
 
-    res.locals.user = jwtPayload
+		res.locals.user = jwtPayload;
 
-    next()
-  } catch (error) {
-    return res.status(403).json({
-        "success" : false,
-        "error" : 403,
-        "message" : 'failed to check token',
-        "data" : null
-    })
-  }
-}
+		next();
+	} catch (error) {
+		return res.status(403).json({
+			success: false,
+			error: 403,
+			message: "failed to check token",
+			data: null,
+		});
+	}
+};
 
-module.exports = checkToken
+module.exports = checkToken;

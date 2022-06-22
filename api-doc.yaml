@@ -1,0 +1,704 @@
+swagger: "2.0"
+info:
+    description: "This is a SecondHand API documentation"
+    version: "1.0.0"
+    title: "SecondHand API"
+host: "localhost:3000"
+basePath: "/api/"
+tags:
+    - name: "user"
+      description: "Operations about user"
+schemes:
+    - "http"
+paths:
+    # --- USER
+    /user/login:
+        post:
+            tags:
+                - "user"
+            summary: "User login"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      required:
+                          - "email"
+                          - "password"
+                      properties:
+                          email:
+                              type: "string"
+                          password:
+                              type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/userSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /user/register:
+        post:
+            tags:
+                - "user"
+            summary: "User register"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  description: "The email for register"
+                  required: true
+                  schema:
+                      type: "object"
+                      required:
+                          - "name"
+                          - "email"
+                          - "password"
+                      properties:
+                          name:
+                              type: "string"
+                          email:
+                              type: "string"
+                          password:
+                              type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/userSchema"
+
+                "400":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /user/update/{userId}:
+        put:
+            tags:
+                - "user"
+            summary: "User update"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "userId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      properties:
+                          image:
+                              type: "string"
+                          name:
+                              type: "string"
+                          city:
+                              type: "string"
+                          address:
+                              type: "string"
+                          phoneNumber:
+                              type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/userSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+            security:
+                - bearerAuth: []
+
+    /user/delete/{userId}:
+        delete:
+            tags:
+                - "user"
+            summary: "User delete"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "userId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                    default: true
+                                error:
+                                    type: "integer"
+                                    default: 0
+                                message:
+                                    type: "string"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+            security:
+                - bearerAuth: []
+
+    # --- CATEGORY
+    /category/list:
+        get:
+            tags:
+                - "category"
+            summary: "Get all categories"
+            description: ""
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        $ref: "#/definitions/categoryProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /category/create:
+        post:
+            tags:
+                - "category"
+            summary: "Create a category"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      required:
+                          - "name"
+                          - "description"
+                      properties:
+                          name:
+                              type: "string"
+                          description:
+                              type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/categoryProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /category/{categoryId}:
+        get:
+            tags:
+                - "category"
+            summary: "Get category by id"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "categoryId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/categorySchema"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /category/update/{categoryId}:
+        put:
+            tags:
+                - "category"
+            summary: "Category update"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "categoryId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      properties:
+                          name:
+                              type: "string"
+                          description:
+                              type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/categorySchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /category/delete/{categoryId}:
+        delete:
+            tags:
+                - "category"
+            summary: "Category delete"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "categoryId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                    default: true
+                                error:
+                                    type: "integer"
+                                    default: 0
+                                message:
+                                    type: "string"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+            # Blm pake jwt
+            # security:
+            #     - bearerAuth: []
+
+    # --- PRODUCT
+    /product/list:
+        get:
+            tags:
+                - "product"
+            summary: "Get all products"
+            description: ""
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        $ref: "#/definitions/productProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    # !!!
+    /product/create:
+        post:
+            tags:
+                - "product"
+            summary: "Create a product (work tapi blm fix karena image harus diinput ke table lain)"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      required:
+                          - "name"
+                          - "description"
+                          - "price"
+                          - "categoryId"
+                          - "image"
+                      properties:
+                          name:
+                              type: "string"
+                          description:
+                              type: "string"
+                          price:
+                              type: "integer"
+                          categoryId:
+                              type: "integer"
+                          image:
+                              type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/productProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /product/{productId}:
+        get:
+            tags:
+                - "product"
+            summary: "Get product by id"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/productSchema"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /product/by-category/{categoryId}:
+        get:
+            tags:
+                - "product"
+            summary: "Get all products by category id"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "categoryId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        $ref: "#/definitions/productProps"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /product/name/{productName}:
+        get:
+            tags:
+                - "product"
+            summary: "Get a product by name"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productName"
+                  in: "path"
+                  required: true
+                  type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/productSchema"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    # blm fix
+    /product/update/{productId}:
+        put:
+            tags:
+                - "product"
+            summary: "Product update (blm fix apa aja yg bisa diupdate nantinya)"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      properties: # properties blm lengkap
+                          name:
+                              type: "string"
+                          description:
+                              type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/productSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /product/delete/{productId}:
+        delete:
+            tags:
+                - "product"
+            summary: "Product delete"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                    default: true
+                                error:
+                                    type: "integer"
+                                    default: 0
+                                message:
+                                    type: "string"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+            # Blm pake jwt
+            # security:
+            #     - bearerAuth: []
+
+# Authorization
+securityDefinitions:
+    bearerAuth:
+        name: Authorization # arbitrary name for the security scheme
+        type: apiKey
+        scheme: bearer
+        in: header
+
+definitions:
+    userSchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                    error:
+                        type: "integer"
+                    message:
+                        type: "string"
+                    data:
+                        type: "object"
+                        properties:
+                            id:
+                                type: "integer"
+                            name:
+                                type: "string"
+                            email:
+                                type: "string"
+                            password:
+                                type: "string"
+                            city:
+                                type: "string"
+                            address:
+                                type: "string"
+                            phoneNumber:
+                                type: "string"
+                            image:
+                                type: "string"
+                            createdAt:
+                                type: "string"
+                                format: "date-time"
+                            updatedAt:
+                                type: "string"
+                                format: "date-time"
+    categorySchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                    error:
+                        type: "integer"
+                    message:
+                        type: "string"
+                    data:
+                        type: "object"
+                        $ref: "#/definitions/categoryProps"
+    categoryProps:
+        properties:
+            id:
+                type: "integer"
+            name:
+                type: "string"
+            description:
+                type: "string"
+            createdAt:
+                type: "string"
+                format: "date-time"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+    productSchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                    error:
+                        type: "integer"
+                    message:
+                        type: "string"
+                    data:
+                        type: "object"
+                        $ref: "#/definitions/productProps"
+    productProps:
+        properties:
+            id:
+                type: "integer"
+            name:
+                type: "string"
+            description:
+                type: "string"
+            price:
+                type: "integer"
+            image:
+                type: "string"
+            categoryId:
+                type: "integer"
+            createdAt:
+                type: "string"
+                format: "date-time"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+
+    errorSchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                        default: false
+                    error:
+                        type: "object"
+                        default: {}
+                    message:
+                        type: "string"
+                        # default: {}
+                    data:
+                        type: "boolean"
+                        default: null
+                        # properties:
+                        #     id:
+                        #         type: "integer"
+                        #     roleId:
+                        #         type: "integer"
+                        #     name:
+                        #         type: "string"
+                        #     username:
+                        #         type: "string"
+                        #     email:
+                        #         type: "string"
+                        #     isActive:
+                        #         type: "boolean"
+                        #     createdAt:
+                        #         type: "string"
+                        #         format: "date-time"
+                        #     updatedAt:
+                        #         type: "string"
+                        #         format: "date-time"

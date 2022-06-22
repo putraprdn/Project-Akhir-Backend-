@@ -1,7 +1,13 @@
 const express = require("express");
 const controllers = require("../app/controllers");
+const middlewares = require("../app/middleware");
 
-const appRouter = express.Router();
+// Some dependencies for api documenations
+const YAML = require("yamljs");
+const swaggerUI = require("swagger-ui-express");
+const apiDocs = YAML.load("./api-doc.yaml");
+
+// const appRouter = express.Router();
 const apiRouter = express.Router();
 
 /** Mount GET / handler */
@@ -14,51 +20,87 @@ appRouter.put("/category/update", controllers.api.v1.categoryController.update)
 appRouter.delete("/category/delete/:id", controllers.api.v1.categoryController.destroy)
 /** 
  * Implement Product API
+/**
+ * API DOCUMENTATION
+ * using Swagger UI
  */
+apiRouter.use("/api/documentation", swaggerUI.serve, swaggerUI.setup(apiDocs));
 
-// Product List
-apiRouter.get("/api/v1/products", controllers.api.v1.product.list);
-// Show a product by id
+/**
+ * CATEGORY API
+ */
+apiRouter.get("/api/category/list", controllers.api.v1.categoryController.list);
 apiRouter.get(
-  "/api/v1/products/:id",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.show
+	"/api/category/:id",
+	controllers.api.v1.categoryController.findById
 );
-// Show a product by name
-apiRouter.get(
-  "/api/v1/products/name/:name",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.showByName
+apiRouter.post(
+	"/api/category/create",
+	controllers.api.v1.categoryController.create
 );
-// Show a product by category
-apiRouter.get(
-  "/api/v1/products/category/:categoryId",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.showByCategory
-);
-// Create a new product
-apiRouter.post("/api/v1/products", controllers.api.v1.product.create);
-// Update a product
 apiRouter.put(
-  "/api/v1/products/:id",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.update
+	"/api/category/update/:id",
+	controllers.api.v1.categoryController.update
 );
-// Delete a product
 apiRouter.delete(
-  "/api/v1/products/:id",
-  controllers.api.v1.product.setProduct,
-  controllers.api.v1.product.destroy
+	"/api/category/delete/:id",
+	controllers.api.v1.categoryController.destroy
 );
 
 /**
- * TODO: Implement your own API
- *       implementations
+ * PRODUCT API
  */
 
-appRouter.post("/user/register", controllers.api.v1.userController.register);
-appRouter.post("/user/login", controllers.api.v1.userController.login);
-appRouter.put("/user/update/:id", controllers.api.v1.userController.update);
-appRouter.delete("/user/destroy/:id", controllers.api.v1.userController.destroy);
+// Product List
+apiRouter.get("/api/product/list", controllers.api.v1.productController.list);
+// Show a product by id
+apiRouter.get(
+	"/api/product/:id",
+	controllers.api.v1.productController.findById
+);
+// Show a product by name
+apiRouter.get(
+	"/api/product/name/:name",
+	controllers.api.v1.productController.findByName
+);
+// Show a product by category
+apiRouter.get(
+	"/api/product/by-category/:categoryId",
+	controllers.api.v1.productController.findByCategory
+);
+// Create a new product
+apiRouter.post(
+	"/api/product/create",
+	controllers.api.v1.productController.create
+);
+// Update a product
+apiRouter.put(
+	"/api/product/update/:id",
+	controllers.api.v1.productController.update
+);
+// Delete a product
+apiRouter.delete(
+	"/api/product/delete/:id",
+	controllers.api.v1.productController.destroy
+);
 
-module.exports = appRouter;
+/**
+ * USER API
+ */
+apiRouter.post(
+	"/api/user/register",
+	controllers.api.v1.userController.register
+);
+apiRouter.post("/api/user/login", controllers.api.v1.userController.login);
+apiRouter.put(
+	"/api/user/update/:id",
+	middlewares.checkToken,
+	controllers.api.v1.userController.update
+);
+apiRouter.delete(
+	"/api/user/delete/:id",
+	middlewares.checkToken,
+	controllers.api.v1.userController.destroy
+);
+
+module.exports = apiRouter;
