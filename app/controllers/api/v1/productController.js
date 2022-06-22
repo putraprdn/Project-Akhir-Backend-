@@ -8,10 +8,10 @@ module.exports = {
 
 			if (products < 1) {
 				return res.status(200).json({
-					success: true,
+					success: false,
 					error: 0,
 					message: "data empty",
-					data: datas,
+					data: null
 				});
 			}
 
@@ -37,10 +37,10 @@ module.exports = {
 
 			if (product < 1) {
 				return res.status(200).json({
-					success: true,
+					success: false,
 					error: 0,
 					message: "data empty",
-					data: datas,
+					data: null,
 				});
 			}
 			return res.status(200).json({
@@ -69,10 +69,10 @@ module.exports = {
 
 			if (product < 1) {
 				return res.status(200).json({
-					success: true,
+					success: false,
 					error: 0,
 					message: "data empty",
-					data: datas,
+					data: null,
 				});
 			}
 
@@ -102,10 +102,10 @@ module.exports = {
 
 			if (product < 1) {
 				return res.status(200).json({
-					success: true,
+					success: false,
 					error: 0,
 					message: "data empty",
-					data: datas,
+					data: null,
 				});
 			}
 
@@ -127,7 +127,13 @@ module.exports = {
 	// Create a new product
 	create: async (req, res) => {
 		try {
-			const product = await model.product.create(req.body);
+			const product = await model.product.create({
+				name: req.body.name,
+				description: req.body.description,
+				price: req.body.price,
+				categoryId: req.body.categoryId,
+			});
+
 			res.status(200).json({
 				success: true,
 				error: 0,
@@ -155,10 +161,10 @@ module.exports = {
 
 			if (product < 1) {
 				return res.status(200).json({
-					success: true,
+					success: false,
 					error: 0,
 					message: "data empty",
-					data: datas,
+					data: null,
 				});
 			}
 
@@ -188,10 +194,10 @@ module.exports = {
 
 			if (product < 1) {
 				return res.status(200).json({
-					success: true,
+					success: false,
 					error: 0,
 					message: "data empty",
-					data: datas,
+					data: null,
 				});
 			}
 
