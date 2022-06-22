@@ -231,7 +231,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /category/list/{categoryId}:
+    /category/{categoryId}:
         get:
             tags:
                 - "category"
@@ -253,12 +253,11 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    # nunggu update controller
     /category/update/{categoryId}:
         put:
             tags:
                 - "category"
-            summary: "Category update (blm work karena masih pake body di controllernya)"
+            summary: "Category update"
             description: ""
             produces:
                 - "application/json"
@@ -356,12 +355,12 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    # blm work
+    # !!!
     /product/create:
         post:
             tags:
                 - "product"
-            summary: "Create a product (blm work karena controller blm fix)"
+            summary: "Create a product (work tapi blm fix karena image harus diinput ke table lain)"
             description: ""
             produces:
                 - "application/json"
@@ -374,10 +373,19 @@ paths:
                       required:
                           - "name"
                           - "description"
+                          - "price"
+                          - "categoryId"
+                          - "image"
                       properties:
                           name:
                               type: "string"
                           description:
+                              type: "string"
+                          price:
+                              type: "integer"
+                          categoryId:
+                              type: "integer"
+                          image:
                               type: "string"
             responses:
                 "200":
@@ -479,12 +487,12 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    # blm work
+    # blm fix
     /product/update/{productId}:
         put:
             tags:
                 - "product"
-            summary: "Product update (blm work karena masih blm fix di controllernya)"
+            summary: "Product update (blm fix apa aja yg bisa diupdate nantinya)"
             description: ""
             produces:
                 - "application/json"
@@ -513,12 +521,11 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    # blm dites
     /product/delete/{productId}:
         delete:
             tags:
                 - "product"
-            summary: "Product delete (blm dites)"
+            summary: "Product delete"
             description: ""
             produces:
                 - "application/json"

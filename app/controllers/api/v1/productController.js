@@ -6,14 +6,7 @@ module.exports = {
 		try {
 			const products = await model.product.findAll();
 
-			if (products < 1) {
-				return res.status(200).json({
-					success: false,
-					error: 0,
-					message: "data empty",
-					data: null
-				});
-			}
+			if (products < 1) throw new Error("data empty");
 
 			return res.status(200).json({
 				success: true,
@@ -35,14 +28,7 @@ module.exports = {
 		try {
 			const product = await model.product.findByPk(req.params.id);
 
-			if (product < 1) {
-				return res.status(200).json({
-					success: false,
-					error: 0,
-					message: "data empty",
-					data: null,
-				});
-			}
+			if (product < 1) throw new Error("data empty");
 			return res.status(200).json({
 				success: true,
 				error: 0,
@@ -67,14 +53,7 @@ module.exports = {
 				},
 			});
 
-			if (product < 1) {
-				return res.status(200).json({
-					success: false,
-					error: 0,
-					message: "data empty",
-					data: null,
-				});
-			}
+			if (product < 1) throw new Error("data empty");
 
 			res.status(200).json({
 				success: true,
@@ -100,14 +79,7 @@ module.exports = {
 				},
 			});
 
-			if (product < 1) {
-				return res.status(200).json({
-					success: false,
-					error: 0,
-					message: "data empty",
-					data: null,
-				});
-			}
+			if (product < 1) throw new Error("data empty");
 
 			res.status(200).json({
 				success: true,
@@ -132,6 +104,7 @@ module.exports = {
 				description: req.body.description,
 				price: req.body.price,
 				categoryId: req.body.categoryId,
+				image: "image-1",
 			});
 
 			res.status(200).json({
@@ -159,14 +132,7 @@ module.exports = {
 				},
 			});
 
-			if (product < 1) {
-				return res.status(200).json({
-					success: false,
-					error: 0,
-					message: "data empty",
-					data: null,
-				});
-			}
+			if (product < 1) throw new Error("data empty");
 
 			res.status(200).json({
 				success: true,
@@ -192,14 +158,7 @@ module.exports = {
 				},
 			});
 
-			if (product < 1) {
-				return res.status(200).json({
-					success: false,
-					error: 0,
-					message: "data empty",
-					data: null,
-				});
-			}
+			if (product < 1) throw new Error("data empty");
 
 			res.status(200).json({
 				success: true,
