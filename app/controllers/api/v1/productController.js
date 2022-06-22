@@ -6,6 +6,15 @@ module.exports = {
 		try {
 			const products = await model.product.findAll();
 
+			if (products < 1) {
+				return res.status(200).json({
+					success: true,
+					error: 0,
+					message: "data empty",
+					data: datas,
+				});
+			}
+
 			return res.status(200).json({
 				success: true,
 				error: 0,
@@ -25,6 +34,15 @@ module.exports = {
 	findById: async (req, res) => {
 		try {
 			const product = await model.product.findByPk(req.params.id);
+
+			if (product < 1) {
+				return res.status(200).json({
+					success: true,
+					error: 0,
+					message: "data empty",
+					data: datas,
+				});
+			}
 			return res.status(200).json({
 				success: true,
 				error: 0,
@@ -48,6 +66,16 @@ module.exports = {
 					name: req.params.name,
 				},
 			});
+
+			if (product < 1) {
+				return res.status(200).json({
+					success: true,
+					error: 0,
+					message: "data empty",
+					data: datas,
+				});
+			}
+
 			res.status(200).json({
 				success: true,
 				error: 0,
@@ -72,8 +100,14 @@ module.exports = {
 				},
 			});
 
-			// if product return empty array throw an error
-			if (product.length < 1) throw new Error("NOT FOUND"); // change the error message
+			if (product < 1) {
+				return res.status(200).json({
+					success: true,
+					error: 0,
+					message: "data empty",
+					data: datas,
+				});
+			}
 
 			res.status(200).json({
 				success: true,
@@ -109,6 +143,7 @@ module.exports = {
 			});
 		}
 	},
+
 	// Update a product
 	update: async (req, res) => {
 		try {
@@ -117,6 +152,16 @@ module.exports = {
 					id: req.params.id,
 				},
 			});
+
+			if (product < 1) {
+				return res.status(200).json({
+					success: true,
+					error: 0,
+					message: "data empty",
+					data: datas,
+				});
+			}
+
 			res.status(200).json({
 				success: true,
 				error: 0,
@@ -140,6 +185,16 @@ module.exports = {
 					id: req.params.id,
 				},
 			});
+
+			if (product < 1) {
+				return res.status(200).json({
+					success: true,
+					error: 0,
+					message: "data empty",
+					data: datas,
+				});
+			}
+
 			res.status(200).json({
 				success: true,
 				error: 0,

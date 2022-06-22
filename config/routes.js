@@ -59,7 +59,10 @@ apiRouter.get(
 	controllers.api.v1.productController.findByCategory
 );
 // Create a new product
-apiRouter.post("/api/product", controllers.api.v1.productController.create);
+apiRouter.post(
+	"/api/product/create",
+	controllers.api.v1.productController.create
+);
 // Update a product
 apiRouter.put(
 	"/api/product/update/:id",

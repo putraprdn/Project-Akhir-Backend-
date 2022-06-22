@@ -394,7 +394,7 @@ paths:
                                     type: "string"
                                 data:
                                     type: "object"
-                                    $ref: "#/definitions/categoryProps"
+                                    $ref: "#/definitions/productProps"
 
                 "500":
                     description: "Server Error"
