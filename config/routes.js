@@ -93,4 +93,22 @@ apiRouter.delete(
 	controllers.api.v1.userController.destroy
 );
 
+/**
+ * OFFER API
+ */
+apiRouter.get("/api/offer/list", controllers.api.v1.offerController.list);
+apiRouter.post(
+	"/api/offer/create/:id",
+	middlewares.checkToken,
+	controllers.api.v1.offerController.create
+);
+apiRouter.put(
+	"/api/offer/update/:id",
+	controllers.api.v1.offerController.update
+);
+apiRouter.get(
+	"/api/offer/:id",
+	controllers.api.v1.offerController.findById
+);
+
 module.exports = apiRouter;
