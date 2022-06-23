@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 			this.belongsTo(models.category);
 			this.hasMany(models.productImage);
 			this.hasOne(models.orderItem);
-			this.hasMany(models.offerhistory, {
+			this.hasMany(models.offer, {
 				foreignKey: "productId",
 			});
 		}

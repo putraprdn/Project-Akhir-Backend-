@@ -2,10 +2,10 @@
 
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		return queryInterface.renameTable("offerhistories", "offerHistories");
+		return queryInterface.renameTable("offerhistories", "offers");
 	},
 
 	async down(queryInterface, Sequelize) {
-		return queryInterface.dropTable("offerhistories", "offerHistories");
+		return queryInterface.dropTable("offerhistories", "offers");
 	},
 };

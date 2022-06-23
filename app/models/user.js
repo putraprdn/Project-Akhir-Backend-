@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
 	class user extends Model {
 		static associate(models) {
 			this.hasOne(models.orderDetail);
-			this.hasMany(models.offerhistory, {
+			this.hasMany(models.offer, {
 				foreignKey: "createdBy",
 			});
 		}
