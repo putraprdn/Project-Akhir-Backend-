@@ -11,6 +11,14 @@ Sebelum menjalankan server pastikan sudah me-rename file `.env-example` menjadi 
 
 jangan lupa juga untuk menginstall seluruh dependencies menggunakan perintah `yarn install`.
 
+Selanjutnya pastikan database dan migrasinya sudah dibuat dengan menjalankan beberapa perintah berikut secara berurutan:
+
+```sh
+yarn db:create
+yarn db:migrate
+yarn db:seed
+```
+
 Dan untuk menjalankan development server, kalian tinggal jalanin salah satu script di [`package.json`](./package.json#L7-8), yang namanya `develop`.
 
 ```sh
