@@ -1,33 +1,28 @@
 "use strict";
 
+const model = require("../../app/models");
+
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.bulkInsert(
-			"products",
-			[
-				{
-					id: 1,
-					name: "product a",
-					description: "desc of product a",
-					price: 20000,
-					image: "image.png",
-					categoryId: 1,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-				{
-					id: 2,
-					name: "product b",
-					description: "desc of product b",
-					price: 50000,
-					image: "image.png",
-					categoryId: 2,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-				},
-			],
-			{}
-		);
+		const categoryIds = [];
+
+		const categories = await model.category.findAll();
+
+		categories.forEach((category) => {
+			categoryIds.push(category.id);
+		});
+
+		const products = categories.map((category, idx) => ({
+			name: `product ${idx + 1}`,
+			description: `desc of product ${idx + 1}`,
+			price: 50000,
+			image: "image.png",
+			categoryId: categoryIds[idx],
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		}));
+
+		await queryInterface.bulkInsert("products", products, {});
 	},
 
 	async down(queryInterface, Sequelize) {

@@ -6,14 +6,12 @@ module.exports = {
 			"categories",
 			[
 				{
-					id: 1,
 					name: "category a",
 					description: "desc of category a",
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				},
 				{
-					id: 2,
 					name: "category b",
 					description: "desc of category b",
 					createdAt: new Date(),
