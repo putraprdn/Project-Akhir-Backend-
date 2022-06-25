@@ -93,18 +93,26 @@ module.exports = {
 	// update user info
 	update: async (req, res) => {
 		try {
+			let tokenHeader = JSON.stringify(req.headers.authorization);
+			tokenHeader = tokenHeader.replaceAll('"', "");
+			const tokenParam = req.params.token;
+
+			if (tokenHeader !== tokenParam) {
+				throw new Error("Unauthorized access");
+			}
+
 			const isUserExist = await model.user.findOne({
 				where: {
-					id: req.params.id,
+					id: res.locals.user.id,
 				},
 			});
-
+			
 			// check if id exists in database
 			if (!isUserExist) throw new Error("User doesn't exist!");
 
 			// check if token's payload is the same user
-			if (res.locals.user.id != req.params.id)
-				throw new Error("Unauthorized access");
+			// if (res.locals.user.id != req.params.id)
+			// 	throw new Error("Unauthorized access");
 
 			await model.user.update(
 				{

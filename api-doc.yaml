@@ -78,7 +78,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /user/update/{userId}:
+    /user/update/{userToken}:
         put:
             tags:
                 - "user"
@@ -87,11 +87,10 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "userId"
+                - name: "userToken"
                   in: "path"
                   required: true
-                  type: "integer"
-                  format: "int64"
+                  type: "string"
                 - name: "body"
                   in: "body"
                   required: true
