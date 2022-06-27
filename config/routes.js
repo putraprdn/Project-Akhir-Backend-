@@ -99,8 +99,9 @@ apiRouter.put(
 	middlewares.checkToken,
 	controllers.api.v1.userController.update
 );
+// Delete user
 apiRouter.delete(
-	"/api/user/delete/:id",
+	"/api/user/delete/:token",
 	middlewares.checkToken,
 	controllers.api.v1.userController.destroy
 );
@@ -123,9 +124,18 @@ apiRouter.put(
 	validators.validate(validators.offerValidator.updateRules),
 	controllers.api.v1.offerController.update
 );
+//Get an offers
+apiRouter.get("/api/offer/:id", controllers.api.v1.offerController.findById);
+//Get all offers by user token
 apiRouter.get(
-	"/api/offer/:id",
-	controllers.api.v1.offerController.findById
+	"/api/offer/user/:token",
+	middlewares.checkToken,
+	controllers.api.v1.offerController.findByUser
+);
+//Get all offers by product id
+apiRouter.get(
+	"/api/offer/product/:productId",
+	controllers.api.v1.offerController.findByProduct
 );
 
 module.exports = apiRouter;
