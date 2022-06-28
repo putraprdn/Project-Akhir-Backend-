@@ -3,16 +3,17 @@ info:
     description: "This is a SecondHand API documentation"
     version: "1.0.0"
     title: "SecondHand API"
-host: "localhost:3000"
-basePath: "/api/"
+# host: "pa-be-k3.herokuapp.co"
+# basePath: "/api/"
 tags:
     - name: "user"
       description: "Operations about user"
 schemes:
+    - "https"
     - "http"
 paths:
     # --- USER
-    /user/login:
+    /api/user/login:
         post:
             tags:
                 - "user"
@@ -43,7 +44,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /user/register:
+    /api/user/register:
         post:
             tags:
                 - "user"
@@ -78,7 +79,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /user/update/{userToken}:
+    /api/user/update/{userToken}:
         put:
             tags:
                 - "user"
@@ -119,7 +120,7 @@ paths:
             security:
                 - bearerAuth: []
 
-    /user/delete/{userToken}:
+    /api/user/delete/{userToken}:
         delete:
             tags:
                 - "user"
@@ -155,7 +156,7 @@ paths:
                 - bearerAuth: []
 
     # --- CATEGORY
-    /category/list:
+    /api/category/list:
         get:
             tags:
                 - "category"
@@ -186,7 +187,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /category/create:
+    /api/category/create:
         post:
             tags:
                 - "category"
@@ -229,7 +230,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /category/{categoryId}:
+    /api/category/{categoryId}:
         get:
             tags:
                 - "category"
@@ -251,7 +252,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /category/update/{categoryId}:
+    /api/category/update/{categoryId}:
         put:
             tags:
                 - "category"
@@ -284,7 +285,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /category/delete/{categoryId}:
+    /api/category/delete/{categoryId}:
         delete:
             tags:
                 - "category"
@@ -322,7 +323,7 @@ paths:
             #     - bearerAuth: []
 
     # --- PRODUCT
-    /product/list:
+    /api/product/list:
         get:
             tags:
                 - "product"
@@ -354,7 +355,7 @@ paths:
                     $ref: "#/definitions/errorSchema"
 
     # !!!
-    /product/create:
+    /api/product/create:
         post:
             tags:
                 - "product"
@@ -406,7 +407,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /product/{productId}:
+    /api/product/{productId}:
         get:
             tags:
                 - "product"
@@ -428,7 +429,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /product/by-category/{categoryId}:
+    /api/product/by-category/{categoryId}:
         get:
             tags:
                 - "product"
@@ -464,7 +465,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /product/name/{productName}:
+    /api/product/name/{productName}:
         get:
             tags:
                 - "product"
@@ -486,7 +487,7 @@ paths:
                     $ref: "#/definitions/errorSchema"
 
     # blm fix
-    /product/update/{productId}:
+    /api/product/update/{productId}:
         put:
             tags:
                 - "product"
@@ -519,7 +520,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /product/delete/{productId}:
+    /api/product/delete/{productId}:
         delete:
             tags:
                 - "product"
@@ -557,7 +558,7 @@ paths:
             #     - bearerAuth: []
 
     # --- OFFER
-    /offer/list:
+    /api/offer/list:
         get:
             tags:
                 - "offer"
@@ -588,7 +589,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /offer/create/{productId}:
+    /api/offer/create/{productId}:
         post:
             tags:
                 - "offer"
@@ -636,7 +637,7 @@ paths:
             security:
                 - bearerAuth: []
 
-    /offer/{offerId}:
+    /api/offer/{offerId}:
         get:
             tags:
                 - "offer"
@@ -658,7 +659,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /offer/update/{offerId}:
+    /api/offer/update/{offerId}:
         put:
             tags:
                 - "offer"
@@ -689,7 +690,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /offer/user/{userToken}:
+    /api/offer/user/{userToken}:
         get:
             tags:
                 - "offer"
@@ -727,7 +728,7 @@ paths:
             security:
                 - bearerAuth: []
 
-    /offer/product/{productId}:
+    /api/offer/product/{productId}:
         get:
             tags:
                 - "offer"
