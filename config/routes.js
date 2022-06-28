@@ -1,6 +1,7 @@
 const express = require("express");
 const controllers = require("../app/controllers");
 const middlewares = require("../app/middleware");
+const validators = require("../app/validators");
 
 // Some dependencies for api documenations
 const YAML = require("yamljs");
@@ -26,10 +27,12 @@ apiRouter.get(
 );
 apiRouter.post(
 	"/api/category/create",
+	validators.validate(validators.categoryValidator.createRules),
 	controllers.api.v1.categoryController.create
 );
 apiRouter.put(
 	"/api/category/update/:id",
+	validators.validate(validators.categoryValidator.updateRules),
 	controllers.api.v1.categoryController.update
 );
 apiRouter.delete(
@@ -77,20 +80,62 @@ apiRouter.delete(
 /**
  * USER API
  */
+// Register user
 apiRouter.post(
 	"/api/user/register",
+	validators.validate(validators.userValidator.registerRules),
 	controllers.api.v1.userController.register
 );
-apiRouter.post("/api/user/login", controllers.api.v1.userController.login);
+// Login user
+apiRouter.post(
+	"/api/user/login",
+	validators.validate(validators.userValidator.loginRules),
+	controllers.api.v1.userController.login
+);
+// Update user
 apiRouter.put(
-	"/api/user/update/:id",
+	"/api/user/update/:token",
+	validators.validate(validators.userValidator.updateRules),
 	middlewares.checkToken,
 	controllers.api.v1.userController.update
 );
+// Delete user
 apiRouter.delete(
-	"/api/user/delete/:id",
+	"/api/user/delete/:token",
 	middlewares.checkToken,
 	controllers.api.v1.userController.destroy
+);
+
+/**
+ * OFFER API
+ */
+//Get all offers
+apiRouter.get("/api/offer/list", controllers.api.v1.offerController.list);
+//Create an offers
+apiRouter.post(
+	"/api/offer/create/:id",
+	middlewares.checkToken,
+	validators.validate(validators.offerValidator.createRules),
+	controllers.api.v1.offerController.create
+);
+//Update an offers
+apiRouter.put(
+	"/api/offer/update/:id",
+	validators.validate(validators.offerValidator.updateRules),
+	controllers.api.v1.offerController.update
+);
+//Get an offers
+apiRouter.get("/api/offer/:id", controllers.api.v1.offerController.findById);
+//Get all offers by user token
+apiRouter.get(
+	"/api/offer/user/:token",
+	middlewares.checkToken,
+	controllers.api.v1.offerController.findByUser
+);
+//Get all offers by product id
+apiRouter.get(
+	"/api/offer/product/:productId",
+	controllers.api.v1.offerController.findByProduct
 );
 
 module.exports = apiRouter;

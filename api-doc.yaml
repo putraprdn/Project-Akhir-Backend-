@@ -78,7 +78,7 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    /user/update/{userId}:
+    /user/update/{userToken}:
         put:
             tags:
                 - "user"
@@ -87,11 +87,10 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "userId"
+                - name: "userToken"
                   in: "path"
                   required: true
-                  type: "integer"
-                  format: "int64"
+                  type: "string"
                 - name: "body"
                   in: "body"
                   required: true
@@ -120,7 +119,7 @@ paths:
             security:
                 - bearerAuth: []
 
-    /user/delete/{userId}:
+    /user/delete/{userToken}:
         delete:
             tags:
                 - "user"
@@ -129,11 +128,10 @@ paths:
             produces:
                 - "application/json"
             parameters:
-                - name: "userId"
+                - name: "userToken"
                   in: "path"
                   required: true
-                  type: "integer"
-                  format: "int64"
+                  type: "string"
             responses:
                 "200":
                     description: "OK"
@@ -558,6 +556,213 @@ paths:
             # security:
             #     - bearerAuth: []
 
+    # --- OFFER
+    /offer/list:
+        get:
+            tags:
+                - "offer"
+            summary: "Get all offers"
+            description: ""
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        $ref: "#/definitions/offerProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /offer/create/{productId}:
+        post:
+            tags:
+                - "offer"
+            summary: "Create an offer"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      required:
+                          - "price"
+                      properties:
+                          price:
+                              type: "integer"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "object"
+                                    $ref: "#/definitions/offerProps"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+            security:
+                - bearerAuth: []
+
+    /offer/{offerId}:
+        get:
+            tags:
+                - "offer"
+            summary: "Get offer by id"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "offerId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/offerSchema"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /offer/update/{offerId}:
+        put:
+            tags:
+                - "offer"
+            summary: "Offer update"
+            description: "Input only accept 0 or 1 [0: REJECTED, 1: ACCEPTED]"
+            produces:
+                - "application/json"
+            parameters:
+                - name: "offerId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+                - name: "body"
+                  in: "body"
+                  required: true
+                  schema:
+                      type: "object"
+                      properties:
+                          status:
+                              type: "integer"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/offerSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+    /offer/user/{userToken}:
+        get:
+            tags:
+                - "offer"
+            summary: "Get all offers by user"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "userToken"
+                  in: "path"
+                  required: true
+                  type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        $ref: "#/definitions/offerProps"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+            security:
+                - bearerAuth: []
+
+    /offer/product/{productId}:
+        get:
+            tags:
+                - "offer"
+            summary: "Get all offers by product"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "productId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        $ref: "#/definitions/offerProps"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
 # Authorization
 securityDefinitions:
     bearerAuth:
@@ -659,6 +864,38 @@ definitions:
                 type: "string"
             categoryId:
                 type: "integer"
+            createdAt:
+                type: "string"
+                format: "date-time"
+            updatedAt:
+                type: "string"
+                format: "date-time"
+    offerSchema:
+        schema:
+            items:
+                type: "object"
+                properties:
+                    success:
+                        type: "boolean"
+                    error:
+                        type: "integer"
+                    message:
+                        type: "string"
+                    data:
+                        type: "object"
+                        $ref: "#/definitions/offerProps"
+    offerProps:
+        properties:
+            id:
+                type: "integer"
+            productId:
+                type: "integer"
+            createdBy:
+                type: "string"
+            price:
+                type: "integer"
+            status:
+                type: "string"
             createdAt:
                 type: "string"
                 format: "date-time"
