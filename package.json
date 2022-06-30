@@ -10,7 +10,8 @@
     "db:drop": "./node_modules/.bin/sequelize-cli db:drop",
     "db:migrate": "./node_modules/.bin/sequelize-cli db:migrate",
     "db:rollback": "./node_modules/.bin/sequelize-cli db:migrate:undo",
-    "db:seed": "sequelize db:seed:undo:all && sequelize db:seed:all"
+    "db:seed": "sequelize db:seed:undo:all && sequelize db:seed:all",
+    "test": "jest"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -28,6 +29,10 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "eslint": "^8.18.0",
+    "eslint-config-next": "^12.1.6",
+    "jest": "^28.1.1",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.3"
   }
 }
