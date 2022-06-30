@@ -7,6 +7,12 @@ module.exports = (sequelize, DataTypes) => {
 			this.hasMany(models.offer, {
 				foreignKey: "createdBy",
 			});
+			this.hasMany(models.product, {
+				foreignKey: "createdBy",
+			});
+			this.hasMany(models.product, {
+				foreignKey: "soldTo",
+			});
 		}
 	}
 	user.init(
