@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			this.hasOne(models.cart);
 			this.belongsTo(models.category);
+			this.belongsTo(models.user, { foreignKey: "createdBy" });
+			this.belongsTo(models.user, { foreignKey: "soldTo" });
 			this.hasMany(models.productImage);
 			this.hasOne(models.orderItem);
 			this.hasMany(models.offer, {
@@ -22,8 +24,13 @@ module.exports = (sequelize, DataTypes) => {
 			name: DataTypes.STRING,
 			description: DataTypes.STRING,
 			price: DataTypes.INTEGER,
-			image: DataTypes.STRING,
 			categoryId: DataTypes.INTEGER,
+			createdBy: DataTypes.INTEGER,
+			soldTo: DataTypes.INTEGER,
+			soldPrice: DataTypes.INTEGER,
+			isSold: { type: DataTypes.BOOLEAN, defaultValue: false },
+			soldAt: DataTypes.DATE,
+			isAvailable: { type: DataTypes.BOOLEAN, defaultValue: true },
 		},
 		{
 			sequelize,

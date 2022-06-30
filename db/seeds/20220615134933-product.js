@@ -12,12 +12,16 @@ module.exports = {
 			categoryIds.push(category.id);
 		});
 
+		const user = await model.user.findOne();
+
 		const products = categories.map((category, idx) => ({
 			name: `product ${idx + 1}`,
 			description: `desc of product ${idx + 1}`,
 			price: 50000,
-			image: "image.png",
 			categoryId: categoryIds[idx],
+			createdBy: user.id,
+			isSold: false,
+			isAvailable: true,
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		}));
