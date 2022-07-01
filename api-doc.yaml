@@ -85,29 +85,54 @@ paths:
                 - "user"
             summary: "User update"
             description: ""
-            produces:
-                - "application/json"
+            consumes:
+                - multipart/form-data
             parameters:
                 - name: "userToken"
                   in: "path"
                   required: true
                   type: "string"
-                - name: "body"
-                  in: "body"
+                - name: image
+                  in: formData
+                  type: file
                   required: true
-                  schema:
-                      type: "object"
-                      properties:
-                          image:
-                              type: "string"
-                          name:
-                              type: "string"
-                          city:
-                              type: "string"
-                          address:
-                              type: "string"
-                          phoneNumber:
-                              type: "string"
+                  # description: The file to upload
+                - name: name
+                  in: formData
+                  type: string
+                  required: true
+                  # description: The file to upload
+                - name: city
+                  in: formData
+                  type: string
+                  required: true
+                  # description: The file to upload
+                - name: address
+                  in: formData
+                  type: string
+                  required: true
+                  # description: The file to upload
+                - name: phoneNumber
+                  in: formData
+                  type: string
+                  required: true
+                  # description: The file to upload
+                # - name: "body"
+                #   in: "body"
+                #   required: true
+                #   schema:
+                #       type: "object"
+                #       properties:
+                #           image:
+                #               type: "string"
+                #           name:
+                #               type: "string"
+                #           city:
+                #               type: "string"
+                #           address:
+                #               type: "string"
+                #           phoneNumber:
+                #               type: "string"
             responses:
                 "200":
                     description: "OK"

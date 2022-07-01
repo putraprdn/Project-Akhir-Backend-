@@ -2,6 +2,37 @@ const express = require("express");
 const controllers = require("../app/controllers");
 const middlewares = require("../app/middleware");
 const validators = require("../app/validators");
+const multer = require("multer");
+const path = require("path");
+
+// Configuration for multer
+const multerStorage = (myPath) =>
+	multer.diskStorage({
+		destination: (req, file, cb) => {
+			cb(null, `public/files/${myPath}`); // location for assets
+		},
+		filename: (req, file, cb) => {
+			const ext = file.mimetype.split("/")[1];
+			cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
+		},
+	});
+const multerFilter = (req, file, callback) => {
+	const ext = path.extname(file.originalname);
+	if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+		return callback(new Error("Only images are allowed"));
+	}
+	callback(null, true);
+};
+const userPath = "user"; // user path
+const productPath = "product"; // product path
+const upload = (uploadFor) =>
+	multer({
+		storage:
+			uploadFor == "user"
+				? multerStorage(userPath)
+				: multerStorage(productPath),
+		fileFilter: multerFilter,
+	});
 
 // Some dependencies for api documenations
 const YAML = require("yamljs");
@@ -95,8 +126,9 @@ apiRouter.post(
 // Update user
 apiRouter.put(
 	"/api/user/update/:token",
-	validators.validate(validators.userValidator.updateRules),
 	middlewares.checkToken,
+	upload(userPath).single("image"),
+	validators.validate(validators.userValidator.updateRules),
 	controllers.api.v1.userController.update
 );
 // Delete user

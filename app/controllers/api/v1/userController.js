@@ -1,10 +1,11 @@
-const model = require("../../../models");
 const jwt = require("jsonwebtoken");
+const model = require("../../../models");
 const { genSalt, hash, compareSync } = require("bcrypt");
 const cryptPassword = async (password) => {
 	const salt = await genSalt(12);
 	return hash(password, salt);
 };
+const cloudinary = require("../../../../config/cloudinary");
 
 module.exports = {
 	// register user
@@ -93,34 +94,40 @@ module.exports = {
 	// update user info
 	update: async (req, res) => {
 		try {
+			const tokenParam = req.params.token;
+			const { path, filename } = req.file;
+			const { name, city, address, phoneNumber } = req.body;
+			const newFileName = filename.split(".")[0];
 			let tokenHeader = JSON.stringify(req.headers.authorization);
 			tokenHeader = tokenHeader.replaceAll('"', "");
-			const tokenParam = req.params.token;
+			const userId = res.locals.user.id;
 
 			if (tokenHeader !== tokenParam) {
 				throw new Error("Unauthorized access");
 			}
+			// return console.log(req.body);
+			const uploadedImg = await cloudinary.uploader.upload(path, {
+				public_id: `${userId}_${newFileName}`,
+			});
+
+			if (!uploadedImg) throw new Error("Failed to upload image!");
 
 			const isUserExist = await model.user.findOne({
 				where: {
-					id: res.locals.user.id,
+					id: userId,
 				},
 			});
 
 			// check if id exists in database
 			if (!isUserExist) throw new Error("User doesn't exist!");
 
-			// check if token's payload is the same user
-			// if (res.locals.user.id != req.params.id)
-			// 	throw new Error("Unauthorized access");
-
 			await model.user.update(
 				{
-					image: req.body.image,
-					name: req.body.name,
-					city: req.body.city,
-					address: req.body.address,
-					phoneNumber: req.body.phoneNumber,
+					image: uploadedImg.secure_url,
+					name,
+					city,
+					address,
+					phoneNumber,
 				},
 				{
 					where: {

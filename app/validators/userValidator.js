@@ -51,14 +51,5 @@ const updateRules = [
 		.withMessage("Phone number cannot be empty")
 		.isMobilePhone("id-ID")
 		.withMessage("Phone number is invalid"),
-	// body("password")
-	// 	.optional()
-	// 	.isLength({ min: 6 })
-	// 	.withMessage("Password must be at least 6 characters or more"),
-	//   "image": "string",
-	//   "name": "string",
-	//   "city": "string",
-	//   "address": "string",
-	//   "phoneNumber": "string"
 ];
 module.exports = { registerRules, loginRules, updateRules };
