@@ -27,10 +27,7 @@ const userPath = "user"; // user path
 const productPath = "product"; // product path
 const upload = (uploadFor) =>
 	multer({
-		storage:
-			uploadFor == "user"
-				? multerStorage(userPath)
-				: multerStorage(productPath),
+		storage: multerStorage(uploadFor),
 		fileFilter: multerFilter,
 	});
 
