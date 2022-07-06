@@ -23,13 +23,15 @@ const multerFilter = (req, file, callback) => {
 	}
 	callback(null, true);
 };
-const userPath = "user"; // user path
-const productPath = "product"; // product path
 const upload = (uploadFor) =>
 	multer({
 		storage: multerStorage(uploadFor),
 		fileFilter: multerFilter,
 	});
+const imagePath = {
+	user: "user", // user path
+	product: "product", // product path
+};
 
 // Some dependencies for api documenations
 const YAML = require("yamljs");
@@ -128,7 +130,7 @@ apiRouter.post(
 apiRouter.put(
 	"/api/user/update/:token",
 	middlewares.checkToken,
-	upload(userPath).single("image"),
+	upload(imagePath.user).single("image"),
 	validators.validate(validators.userValidator.updateRules),
 	controllers.api.v1.userController.update
 );
