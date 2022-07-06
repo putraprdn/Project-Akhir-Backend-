@@ -42,6 +42,11 @@ const apiDocs = YAML.load("./api-doc.yaml");
 const apiRouter = express.Router();
 
 /**
+ * Root handler
+ */
+apiRouter.get("/", controllers.api.v1.applicationController.handleGetRoot);
+
+/**
  * API DOCUMENTATION
  * using Swagger UI
  */
@@ -172,5 +177,10 @@ apiRouter.get(
 	"/api/offer/product/:productId",
 	controllers.api.v1.offerController.findByProduct
 );
+
+/**
+ * Error handler
+ */
+apiRouter.use(controllers.api.v1.applicationController.handleNotFound);
 
 module.exports = apiRouter;

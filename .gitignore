@@ -81,3 +81,9 @@ typings/
 # Lock file
 package-lock.json
 yarn.lock
+
+# unnecessary file
+public/files/user
+public/files/product
+
+.env

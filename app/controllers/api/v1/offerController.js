@@ -117,7 +117,7 @@ module.exports = {
 			// throw error if response neither 0 nor 1
 			if (!response) throw new Error("Invalid input!");
 
-			// if an offer is ACCEPTED, auto change status of the rest offers to REJECTED
+			// if an offer is ACCEPTED, auto change status of the rest of the offers to REJECTED
 			if (req.body.status == 1) {
 				await model.offer.update(
 					{

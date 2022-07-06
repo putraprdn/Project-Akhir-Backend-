@@ -69,7 +69,7 @@ module.exports = {
 						email: user.email,
 					},
 					process.env.ACCESS_TOKEN_SECRET,
-					{ expiresIn: "2h" }
+					{ expiresIn: "1d" }
 				);
 
 				return res.status(200).json({
