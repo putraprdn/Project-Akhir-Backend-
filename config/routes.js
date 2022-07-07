@@ -92,16 +92,20 @@ apiRouter.get(
 // Create a new product
 apiRouter.post(
 	"/api/product/create",
+	middlewares.checkToken,
 	controllers.api.v1.productController.create
 );
 // Update a product
 apiRouter.put(
 	"/api/product/update/:id",
+	middlewares.checkToken,
+	upload(productPath).array("image", 4),
 	controllers.api.v1.productController.update
 );
 // Delete a product
 apiRouter.delete(
 	"/api/product/delete/:id",
+	middlewares.checkToken,
 	controllers.api.v1.productController.destroy
 );
 

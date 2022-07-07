@@ -1,4 +1,5 @@
 const model = require("../../../models");
+const cloudinary = require("../../../../config/cloudinary");
 
 module.exports = {
 	// Show all products
@@ -104,7 +105,6 @@ module.exports = {
 				description: req.body.description,
 				price: req.body.price,
 				categoryId: req.body.categoryId,
-				image: "image-1",
 			});
 
 			res.status(200).json({
@@ -126,13 +126,28 @@ module.exports = {
 	// Update a product
 	update: async (req, res) => {
 		try {
-			const product = await model.product.update(req.body, {
-				where: {
-					id: req.params.id,
-				},
+			const { path, filename } = req.file;
+			const newFileName = filename.split(".")[0];
+			const userId = res.locals.user.id;
+			// upload to cloudinary
+			const uploadedImg = await cloudinary.uploader.upload(path, {
+				public_id: `${userId}_${newFileName}`,
 			});
-
-			if (product < 1) throw new Error("data empty");
+			// update product
+			const product = await model.product.update(
+				{
+					name: req.body.name,
+					description: req.body.description,
+					price: req.body.price,
+					categoryId: req.body.categoryId,
+					image: uploadedImg.url,
+				},
+				{
+					where: {
+						id: req.params.id,
+					}
+				}
+			);
 
 			res.status(200).json({
 				success: true,
@@ -140,7 +155,8 @@ module.exports = {
 				message: "Product updated",
 				data: product,
 			});
-		} catch (error) {
+		}
+		catch (error) {
 			res.status(500).json({
 				success: false,
 				error: error,
