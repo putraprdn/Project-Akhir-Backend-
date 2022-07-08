@@ -100,13 +100,14 @@ apiRouter.get(
 apiRouter.post(
 	"/api/product/create",
 	middlewares.checkToken,
+	upload(imagePath.product).array("image", 4),
 	controllers.api.v1.productController.create
 );
 // Update a product
 apiRouter.put(
 	"/api/product/update/:id",
 	middlewares.checkToken,
-	upload(productPath).array("image", 4),
+	upload(imagePath.product).array("image", 4),
 	controllers.api.v1.productController.update
 );
 // Delete a product

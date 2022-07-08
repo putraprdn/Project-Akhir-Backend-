@@ -10,8 +10,11 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			this.hasOne(models.cart);
 			this.belongsTo(models.category);
-			this.belongsTo(models.user, { foreignKey: "createdBy" });
-			this.belongsTo(models.user, { foreignKey: "soldTo" });
+			this.belongsTo(models.user, {
+				foreignKey: "createdBy",
+				as: "seller",
+			});
+			this.belongsTo(models.user, { foreignKey: "soldTo", as: "buyer" });
 			this.hasMany(models.productImage);
 			this.hasOne(models.orderItem);
 			this.hasMany(models.offer, {

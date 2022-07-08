@@ -7,7 +7,6 @@ info:
 # basePath: "/api/"
 tags:
     - name: "user"
-      description: "Operations about user"
 schemes:
     - "https"
     - "http"
@@ -96,43 +95,22 @@ paths:
                   in: formData
                   type: file
                   required: true
-                  # description: The file to upload
                 - name: name
                   in: formData
                   type: string
                   required: true
-                  # description: The file to upload
                 - name: city
                   in: formData
                   type: string
                   required: true
-                  # description: The file to upload
                 - name: address
                   in: formData
                   type: string
                   required: true
-                  # description: The file to upload
                 - name: phoneNumber
                   in: formData
                   type: string
                   required: true
-                  # description: The file to upload
-                # - name: "body"
-                #   in: "body"
-                #   required: true
-                #   schema:
-                #       type: "object"
-                #       properties:
-                #           image:
-                #               type: "string"
-                #           name:
-                #               type: "string"
-                #           city:
-                #               type: "string"
-                #           address:
-                #               type: "string"
-                #           phoneNumber:
-                #               type: "string"
             responses:
                 "200":
                     description: "OK"
@@ -384,33 +362,29 @@ paths:
         post:
             tags:
                 - "product"
-            summary: "Create a product (work tapi blm fix karena image harus diinput ke table lain)"
-            description: ""
-            produces:
-                - "application/json"
+            summary: "Create a product (to upload multiple image files please use postman instead)"
+            description: "this documentation only accept single file upload. To upload multiple files use postman"
             parameters:
-                - name: "body"
-                  in: "body"
+                - name: image
+                  in: formData
+                  type: file
                   required: true
-                  schema:
-                      type: "object"
-                      required:
-                          - "name"
-                          - "description"
-                          - "price"
-                          - "categoryId"
-                          - "image"
-                      properties:
-                          name:
-                              type: "string"
-                          description:
-                              type: "string"
-                          price:
-                              type: "integer"
-                          categoryId:
-                              type: "integer"
-                          image:
-                              type: "string"
+                - name: name
+                  in: formData
+                  type: string
+                  required: true
+                - name: description
+                  in: formData
+                  type: string
+                  required: true
+                - name: price
+                  in: formData
+                  type: integer
+                  required: true
+                - name: categoryId
+                  in: formData
+                  type: integer
+                  required: true
             responses:
                 "200":
                     description: "OK"
@@ -431,6 +405,9 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
+                    
+            security:
+                - bearerAuth: []
 
     /api/product/{productId}:
         get:
@@ -886,16 +863,49 @@ definitions:
                 type: "string"
             price:
                 type: "integer"
-            image:
-                type: "string"
             categoryId:
                 type: "integer"
+            createdBy:
+                type: "string"
+            soldTo:
+                type: "string"
+                default: null
+            soldPrice:
+                type: "integer"
+                default: null
+            isSold:
+                type: "boolean"
+                default: null
+            soldAt:
+                type: "string"
+                format: "date-time"
+                default: null
+            isAvailable:
+                type: "boolean"
+                default: true
             createdAt:
                 type: "string"
                 format: "date-time"
             updatedAt:
                 type: "string"
                 format: "date-time"
+            images:
+                type: "array"
+                items:
+                    type: object
+                    properties:
+                        id:
+                            type: "integer"
+                        productId:
+                            type: "integer"
+                        image:
+                            type: "string"
+                        createdAt:
+                            type: "string"
+                            format: "date-time"
+                        updatedAt:
+                            type: "string"
+                            format: "date-time"
     offerSchema:
         schema:
             items:

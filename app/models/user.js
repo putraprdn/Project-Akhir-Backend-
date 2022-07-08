@@ -8,9 +8,11 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: "createdBy",
 			});
 			this.hasMany(models.product, {
+				as: "seller",
 				foreignKey: "createdBy",
 			});
 			this.hasMany(models.product, {
+				as: "buyer",
 				foreignKey: "soldTo",
 			});
 		}
