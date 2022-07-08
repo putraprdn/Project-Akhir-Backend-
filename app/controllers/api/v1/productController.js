@@ -6,16 +6,43 @@ module.exports = {
 	list: async (req, res) => {
 		try {
 			const products = await model.product.findAll({
-				include: ["productImages"],
+				include: [
+					{
+						model: model.user,
+						as: "seller",
+						attributes: ["email"],
+					},
+					{
+						model: model.user,
+						as: "buyer",
+						attributes: ["email"],
+					},
+					{ model: model.productImage },
+				],
 			});
 
-			if (products < 1) throw new Error("data empty");
+			const datas = products.map((product) => ({
+				id: product.id,
+				name: product.name,
+				description: product.description,
+				price: product.price,
+				categoryId: product.categoryId,
+				createdBy: product.seller.email,
+				soldTo: product.buyer?.email || null,
+				soldPrice: product.soldPrice,
+				isSold: product.isSold,
+				soldAt: product.soldAt,
+				isAvailable: product.isAvailable,
+				createdAt: product.createdAt,
+				updatedAt: product.updatedAt,
+				images: product.productImages,
+			}));
 
 			return res.status(200).json({
 				success: true,
 				error: 0,
 				message: "Products listed",
-				data: products,
+				data: datas,
 			});
 		} catch (error) {
 			res.status(500).json({
@@ -29,14 +56,49 @@ module.exports = {
 	// Show a product by id
 	findById: async (req, res) => {
 		try {
-			const product = await model.product.findByPk(req.params.id);
+			const product = await model.product.findOne({
+				where: {
+					id: req.params.id,
+				},
+				include: [
+					{
+						model: model.user,
+						as: "seller",
+						attributes: ["email"],
+					},
+					{
+						model: model.user,
+						as: "buyer",
+						attributes: ["email"],
+					},
+					{ model: model.productImage },
+				],
+			});
 
 			if (product < 1) throw new Error("data empty");
+
+			const data = {
+				id: product.id,
+				name: product.name,
+				description: product.description,
+				price: product.price,
+				categoryId: product.categoryId,
+				createdBy: product.seller.email,
+				soldTo: product.buyer?.email || null,
+				soldPrice: product.soldPrice,
+				isSold: product.isSold,
+				soldAt: product.soldAt,
+				isAvailable: product.isAvailable,
+				createdAt: product.createdAt,
+				updatedAt: product.updatedAt,
+				images: product.productImages,
+			};
+
 			return res.status(200).json({
 				success: true,
 				error: 0,
 				message: "Product found",
-				data: product,
+				data: data,
 			});
 		} catch (error) {
 			res.status(500).json({
@@ -54,15 +116,45 @@ module.exports = {
 				where: {
 					name: req.params.name,
 				},
+				include: [
+					{
+						model: model.user,
+						as: "seller",
+						attributes: ["email"],
+					},
+					{
+						model: model.user,
+						as: "buyer",
+						attributes: ["email"],
+					},
+					{ model: model.productImage },
+				],
 			});
 
 			if (product < 1) throw new Error("data empty");
+
+			const data = {
+				id: product.id,
+				name: product.name,
+				description: product.description,
+				price: product.price,
+				categoryId: product.categoryId,
+				createdBy: product.seller.email,
+				soldTo: product.buyer?.email || null,
+				soldPrice: product.soldPrice,
+				isSold: product.isSold,
+				soldAt: product.soldAt,
+				isAvailable: product.isAvailable,
+				createdAt: product.createdAt,
+				updatedAt: product.updatedAt,
+				images: product.productImages,
+			};
 
 			res.status(200).json({
 				success: true,
 				error: 0,
 				message: "Product found",
-				data: product,
+				data: data,
 			});
 		} catch (error) {
 			res.status(500).json({
@@ -76,19 +168,47 @@ module.exports = {
 	// Show a product by category
 	findByCategory: async (req, res) => {
 		try {
-			const product = await model.product.findAll({
+			const products = await model.product.findAll({
 				where: {
 					categoryId: req.params.categoryId,
 				},
+				include: [
+					{
+						model: model.user,
+						as: "seller",
+						attributes: ["email"],
+					},
+					{
+						model: model.user,
+						as: "buyer",
+						attributes: ["email"],
+					},
+					{ model: model.productImage },
+				],
 			});
 
-			if (product < 1) throw new Error("data empty");
+			const datas = products.map((product) => ({
+				id: product.id,
+				name: product.name,
+				description: product.description,
+				price: product.price,
+				categoryId: product.categoryId,
+				createdBy: product.seller.email,
+				soldTo: product.buyer?.email || null,
+				soldPrice: product.soldPrice,
+				isSold: product.isSold,
+				soldAt: product.soldAt,
+				isAvailable: product.isAvailable,
+				createdAt: product.createdAt,
+				updatedAt: product.updatedAt,
+				images: product.productImages,
+			}));
 
 			res.status(200).json({
 				success: true,
 				error: 0,
 				message: "Product found",
-				data: product,
+				data: datas,
 			});
 		} catch (error) {
 			res.status(500).json({
@@ -153,7 +273,6 @@ module.exports = {
 				],
 			});
 
-			const buyer = getProduct.buyer?.email;
 			const data = {
 				id: getProduct.id,
 				name: getProduct.name,
@@ -161,7 +280,7 @@ module.exports = {
 				price: getProduct.price,
 				categoryId: getProduct.categoryId,
 				createdBy: getProduct.seller.email,
-				soldTo: buyer || null,
+				soldTo: getProduct.buyer?.email || null,
 				soldPrice: getProduct.soldPrice,
 				isSold: getProduct.isSold,
 				soldAt: getProduct.soldAt,
@@ -198,6 +317,7 @@ module.exports = {
 			const uploadedImg = await cloudinary.uploader.upload(path, {
 				public_id: `${userId}_${newFileName}`,
 			});
+
 			// update product
 			const product = await model.product.update(
 				{
