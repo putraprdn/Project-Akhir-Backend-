@@ -11,7 +11,6 @@ module.exports = {
 			"users",
 			[
 				{
-					id: 1,
 					name: "demo",
 					email: "demo@gmail.com",
 					password: encryptedPassword,

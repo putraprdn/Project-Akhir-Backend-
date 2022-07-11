@@ -2,6 +2,7 @@ const express = require("express");
 const controllers = require("../app/controllers");
 const middlewares = require("../app/middleware");
 const validators = require("../app/validators");
+const passport = require("passport");
 const multer = require("multer");
 const path = require("path");
 
@@ -40,6 +41,17 @@ const apiDocs = YAML.load("./api-doc.yaml");
 
 // const appRouter = express.Router();
 const apiRouter = express.Router();
+
+// Configuration for Google Auth
+require("../app/middleware/googleAuth");
+apiRouter.use(passport.initialize());
+
+passport.serializeUser((user, callback) => {
+	callback(null, user);
+});
+passport.deserializeUser((user, callback) => {
+	callback(null, user);
+});
 
 /**
  * Root handler
@@ -139,6 +151,43 @@ apiRouter.put(
 	upload(imagePath.user).single("image"),
 	validators.validate(validators.userValidator.updateRules),
 	controllers.api.v1.userController.update
+);
+// Login using google auth
+apiRouter.get(
+	"/user/auth/google",
+	passport.authenticate("google", {
+		scope: ["profile", "email"],
+	})
+);
+apiRouter.get(
+	"/user/auth/google/redirect",
+	passport.authenticate("google", {
+		failureRedirect: "/login",
+		session: false,
+	}),
+	(req, res) => {
+		const jwt = req.user.token;
+		const data = {
+			id: req.user.id,
+			name: req.user.name,
+			email: req.user.email,
+			city: req.user.city,
+			address: req.user.address,
+			phoneNumber: req.user.phoneNumber,
+			image: req.user.image,
+			createdAt: req.user.createdAt,
+			updatedAt: req.user.updatedAt,
+		};
+		req.session = { jwt };
+		res.locals.user = { jwt };
+		return res.status(200).json({
+			success: true,
+			error: 0,
+			message: "Login successful",
+			data: data,
+			token: jwt,
+		});
+	}
 );
 // Delete user
 apiRouter.delete(
