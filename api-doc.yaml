@@ -43,6 +43,30 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
+    /api/user/whoami/{userToken}:
+        get:
+            tags:
+                - "user"
+            summary: "Get user info"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "userToken"
+                  in: "path"
+                  required: true
+                  type: "string"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/userSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+
+            security:
+                - bearerAuth: []
     /api/user/register:
         post:
             tags:
@@ -157,6 +181,66 @@ paths:
 
             security:
                 - bearerAuth: []
+
+    /user/auth/google:
+        get:
+            tags:
+                - "user"
+            summary: "Ini google auth-nya udh bisa tapi gatau cara konek ke swaggernya hehe. Lansung aja pake link yang ada di bawah"
+            description: "[https://pa-be-k3.herokuapp.com/user/auth/google](https://pa-be-k3.herokuapp.com/user/auth/google) klo muncul error url mismatch coba lagi dibuka ulang linknya"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/userSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+            # securityDefinitions:
+            #     google_oauth:
+            #         type: oauth2
+            #         description: Google OAuth
+            #         flow:
+            #             implicit:
+            #                 clientCredentials:
+            #                     authorizationUrl: https://accounts.google.com/o/oauth2/v2/auth
+            #                     tokenUrl: https://www.googleapis.com/oauth2/v4/token
+            #                     x-tokenName: 363070336389-u43tasrbhkpjauvrcbemuk84fotrp5eq.apps.googleusercontent.com
+            #                     scopes:
+            #                         read:profile: read user profile
+            #                         read:email: read user email
+
+    /user/auth/facebook:
+        get:
+            tags:
+                - "user"
+            summary: "Ini juga sama lansung aja pake link yang ada di bawah"
+            description: "[https://pa-be-k3.herokuapp.com/user/auth/facebook](https://pa-be-k3.herokuapp.com/user/auth/facebook) klo muncul error coba lagi dibuka ulang linknya"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/userSchema"
+
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
+            # securityDefinitions:
+            #     google_oauth:
+            #         type: oauth2
+            #         description: Google OAuth
+            #         flow:
+            #             implicit:
+            #                 clientCredentials:
+            #                     authorizationUrl: https://accounts.google.com/o/oauth2/v2/auth
+            #                     tokenUrl: https://www.googleapis.com/oauth2/v4/token
+            #                     x-tokenName: 363070336389-u43tasrbhkpjauvrcbemuk84fotrp5eq.apps.googleusercontent.com
+            #                     scopes:
+            #                         read:profile: read user profile
+            #                         read:email: read user email
 
     # --- CATEGORY
     /api/category/list:
@@ -405,7 +489,7 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
-                    
+
             security:
                 - bearerAuth: []
 
@@ -795,8 +879,6 @@ definitions:
                                 type: "string"
                             email:
                                 type: "string"
-                            password:
-                                type: "string"
                             city:
                                 type: "string"
                             address:
@@ -956,22 +1038,3 @@ definitions:
                     data:
                         type: "boolean"
                         default: null
-                        # properties:
-                        #     id:
-                        #         type: "integer"
-                        #     roleId:
-                        #         type: "integer"
-                        #     name:
-                        #         type: "string"
-                        #     username:
-                        #         type: "string"
-                        #     email:
-                        #         type: "string"
-                        #     isActive:
-                        #         type: "boolean"
-                        #     createdAt:
-                        #         type: "string"
-                        #         format: "date-time"
-                        #     updatedAt:
-                        #         type: "string"
-                        #         format: "date-time"
