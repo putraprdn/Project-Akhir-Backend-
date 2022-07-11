@@ -137,6 +137,11 @@ apiRouter.post(
 	validators.validate(validators.userValidator.loginRules),
 	controllers.api.v1.userController.login
 );
+apiRouter.get(
+	"/api/user/whoami/:token",
+	middlewares.checkToken,
+	controllers.api.v1.userController.whoami
+);
 // Update user
 apiRouter.put(
 	"/api/user/update/:token",

@@ -1,5 +1,7 @@
+const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const model = require("../../../models");
+
 const { genSalt, hash, compareSync } = require("bcrypt");
 const cryptPassword = async (password) => {
 	const salt = await genSalt(12);
@@ -68,10 +70,13 @@ module.exports = {
 			const errorMessage =
 				"You have entered an invalid username or password";
 
-			// check if email registered in database
+			// check if email registered in database and not using oauth
 			const isEmailExist = await model.user.findOne({
 				where: {
 					email: req.body.email,
+					password: {
+						[Op.not]: null, // not null
+					},
 				},
 			});
 
@@ -110,6 +115,55 @@ module.exports = {
 					token,
 				});
 			}
+			throw new Error(errorMessage);
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				error: error,
+				message: error.message,
+				data: null,
+			});
+		}
+	},
+
+	whoami: async (req, res) => {
+		try {
+			const tokenParam = req.params.token;
+			let tokenHeader = JSON.stringify(req.headers.authorization);
+			tokenHeader = tokenHeader.replaceAll('"', "");
+			const email = res.locals.user.email;
+			console.log(`tokenParam:\n${tokenParam}`);
+			console.log(`tokenHeader:\n${tokenHeader}`);
+			if (tokenHeader !== tokenParam) {
+				throw new Error("Unauthorized access");
+			}
+
+			const getUser = await model.user.findOne({
+				where: {
+					email: email,
+				},
+			});
+
+			const user = {
+				id: getUser.id,
+				name: getUser.name,
+				email: getUser.email,
+				city: getUser.city,
+				address: getUser.address,
+				phoneNumber: getUser.phoneNumber,
+				image: getUser.image,
+				createdAt: getUser.createdAt,
+				updatedAt: getUser.updatedAt,
+			};
+
+			return res.status(200).json({
+				success: true,
+				error: 0,
+				message: "User logged in",
+				data: user,
+				tokenHeader,
+			});
+
 			throw new Error(errorMessage);
 		} catch (error) {
 			return res.status(500).json({
