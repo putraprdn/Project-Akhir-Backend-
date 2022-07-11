@@ -42,10 +42,13 @@ const apiDocs = YAML.load("./api-doc.yaml");
 // const appRouter = express.Router();
 const apiRouter = express.Router();
 
+// Configuration for Facebook Auth
+require("../app/middleware/facebookAuth");
+
 // Configuration for Google Auth
 require("../app/middleware/googleAuth");
-apiRouter.use(passport.initialize());
 
+apiRouter.use(passport.initialize());
 passport.serializeUser((user, callback) => {
 	callback(null, user);
 });
@@ -53,20 +56,13 @@ passport.deserializeUser((user, callback) => {
 	callback(null, user);
 });
 
-/**
- * Root handler
- */
+/** Root handler */
 apiRouter.get("/", controllers.api.v1.applicationController.handleGetRoot);
 
-/**
- * API DOCUMENTATION
- * using Swagger UI
- */
+/** API DOCUMENTATION using Swagger UI */
 apiRouter.use("/api/documentation", swaggerUI.serve, swaggerUI.setup(apiDocs));
 
-/**
- * CATEGORY API
- */
+/** CATEGORY API*/
 apiRouter.get("/api/category/list", controllers.api.v1.categoryController.list);
 apiRouter.get(
 	"/api/category/:id",
@@ -87,10 +83,7 @@ apiRouter.delete(
 	controllers.api.v1.categoryController.destroy
 );
 
-/**
- * PRODUCT API
- */
-
+/** PRODUCT API */
 // Product List
 apiRouter.get("/api/product/list", controllers.api.v1.productController.list);
 // Show a product by id
@@ -131,9 +124,7 @@ apiRouter.delete(
 	controllers.api.v1.productController.destroy
 );
 
-/**
- * USER API
- */
+/** USER API */
 // Register user
 apiRouter.post(
 	"/api/user/register",
@@ -164,6 +155,43 @@ apiRouter.get(
 apiRouter.get(
 	"/user/auth/google/redirect",
 	passport.authenticate("google", {
+		failureRedirect: "/login",
+		session: false,
+	}),
+	(req, res) => {
+		const jwt = req.user.token;
+		const data = {
+			id: req.user.id,
+			name: req.user.name,
+			email: req.user.email,
+			city: req.user.city,
+			address: req.user.address,
+			phoneNumber: req.user.phoneNumber,
+			image: req.user.image,
+			createdAt: req.user.createdAt,
+			updatedAt: req.user.updatedAt,
+		};
+		req.session = { jwt };
+		res.locals.user = { jwt };
+		return res.status(200).json({
+			success: true,
+			error: 0,
+			message: "Login successful",
+			data: data,
+			token: jwt,
+		});
+	}
+);
+// Login using facebook auth
+apiRouter.get(
+	"/user/auth/facebook",
+	passport.authenticate("facebook", {
+		scope: ["public_profile", "email"],
+	})
+);
+apiRouter.get(
+	"/user/auth/facebook/redirect",
+	passport.authenticate("facebook", {
 		failureRedirect: "/login",
 		session: false,
 	}),

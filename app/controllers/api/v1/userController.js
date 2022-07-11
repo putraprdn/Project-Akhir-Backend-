@@ -22,11 +22,29 @@ module.exports = {
 
 			const encryptedPassword = await cryptPassword(req.body.password);
 
-			const user = await model.user.create({
+			let user = await model.user.create({
 				name: req.body.name,
 				email: req.body.email,
 				password: encryptedPassword,
 			});
+
+			const getUser = await model.user.findOne({
+				where: {
+					email: user.email,
+				},
+			});
+
+			user = {
+				id: getUser.id,
+				name: getUser.name,
+				email: getUser.email,
+				city: getUser.city,
+				address: getUser.address,
+				phoneNumber: getUser.phoneNumber,
+				image: getUser.image,
+				createdAt: getUser.createdAt,
+				updatedAt: getUser.updatedAt,
+			};
 
 			return res.status(200).json({
 				success: true,
@@ -59,7 +77,7 @@ module.exports = {
 
 			if (!isEmailExist) throw new Error(errorMessage);
 
-			const user = isEmailExist;
+			let user = isEmailExist;
 
 			if (compareSync(req.body.password, user.password)) {
 				const token = jwt.sign(
@@ -71,6 +89,18 @@ module.exports = {
 					process.env.ACCESS_TOKEN_SECRET,
 					{ expiresIn: "1d" }
 				);
+
+				user = {
+					id: isEmailExist.id,
+					name: isEmailExist.name,
+					email: isEmailExist.email,
+					city: isEmailExist.city,
+					address: isEmailExist.address,
+					phoneNumber: isEmailExist.phoneNumber,
+					image: isEmailExist.image,
+					createdAt: isEmailExist.createdAt,
+					updatedAt: isEmailExist.updatedAt,
+				};
 
 				return res.status(200).json({
 					success: true,
@@ -137,11 +167,23 @@ module.exports = {
 			);
 
 			// get user so it can be called in return (data:user)
-			const user = await model.user.findOne({
+			const getUser = await model.user.findOne({
 				where: {
 					id: isUserExist.id,
 				},
 			});
+
+			const user = {
+				id: getUser.id,
+				name: getUser.name,
+				email: getUser.email,
+				city: getUser.city,
+				address: getUser.address,
+				phoneNumber: getUser.phoneNumber,
+				image: getUser.image,
+				createdAt: getUser.createdAt,
+				updatedAt: getUser.updatedAt,
+			};
 
 			return res.status(200).json({
 				success: true,

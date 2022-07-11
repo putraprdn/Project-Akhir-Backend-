@@ -1,23 +1,23 @@
 const jwt = require("jsonwebtoken");
 const model = require("../models");
 const passport = require("passport");
-const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
+const { Strategy: FacebookStrategy } = require("passport-facebook");
 
 passport.use(
-	new GoogleStrategy(
+	new FacebookStrategy(
 		{
-			clientID: process.env.CLIENT_ID,
-			clientSecret: process.env.CLIENT_SECRET,
-			callbackURL: process.env.GOOGLE_CALLBACK_URL,
+			clientID: process.env.FACEBOOK_CLIENT_ID,
+			clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+			callbackURL: process.env.FACEBOOK_CALLBACK_URL,
+			profileFields: ["id", "emails", "name", "photos"],
 		},
 		async (accessToken, refreshToken, profile, callback) => {
 			const account = profile._json;
 
-			// console.log(account);
 			let user = {
-				name: account.name,
+				name: `${account.first_name} ${account.last_name}`,
 				email: account.email,
-				image: account.picture,
+				image: account.picture.data.url,
 				token: undefined,
 			};
 			// console.log(user);
