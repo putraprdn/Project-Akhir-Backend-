@@ -113,6 +113,7 @@ apiRouter.post(
 	"/api/product/create",
 	middlewares.checkToken,
 	upload(imagePath.product).array("image", 4),
+	validators.validate(validators.productValidator.createRules),
 	controllers.api.v1.productController.create
 );
 // Update a product
@@ -120,6 +121,7 @@ apiRouter.put(
 	"/api/product/update/:id",
 	middlewares.checkToken,
 	upload(imagePath.product).array("image", 4),
+	validators.validate(validators.productValidator.updateRules),
 	controllers.api.v1.productController.update
 );
 // Delete a product
