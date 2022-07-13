@@ -32,6 +32,7 @@ module.exports = {
 
 			const getUser = await model.user.findOne({
 				where: {
+					id: user.id,
 					email: user.email,
 				},
 			});
@@ -67,20 +68,24 @@ module.exports = {
 	// user login
 	login: async (req, res) => {
 		try {
-			const errorMessage =
+			const wrongEmailOrPass =
 				"You have entered an invalid username or password";
 
 			// check if email registered in database and not using oauth
 			const isEmailExist = await model.user.findOne({
 				where: {
 					email: req.body.email,
-					password: {
-						[Op.not]: null, // not null
-					},
 				},
 			});
 
-			if (!isEmailExist) throw new Error(errorMessage);
+			// if email not exist in database
+			if (!isEmailExist) throw new Error(wrongEmailOrPass);
+
+			// if password is null means created using oauth
+			if (!isEmailExist.password)
+				throw new Error(
+					"Email already registered with different sign-in credentials"
+				);
 
 			let user = isEmailExist;
 
@@ -114,8 +119,9 @@ module.exports = {
 					data: user,
 					token,
 				});
+			} else {
+				throw new Error(wrongEmailOrPass);
 			}
-			throw new Error(errorMessage);
 		} catch (error) {
 			return res.status(500).json({
 				success: false,
@@ -131,7 +137,7 @@ module.exports = {
 			const tokenParam = req.params.token;
 			let tokenHeader = JSON.stringify(req.headers.authorization);
 			tokenHeader = tokenHeader.replaceAll('"', "");
-			const email = res.locals.user.email;
+			const { email, id } = res.locals.user;
 			console.log(`tokenParam:\n${tokenParam}`);
 			console.log(`tokenHeader:\n${tokenHeader}`);
 			if (tokenHeader !== tokenParam) {
@@ -140,6 +146,7 @@ module.exports = {
 
 			const getUser = await model.user.findOne({
 				where: {
+					id: id,
 					email: email,
 				},
 			});
