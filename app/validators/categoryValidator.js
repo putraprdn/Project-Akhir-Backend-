@@ -17,15 +17,10 @@ const createRules = [
 const updateRules = [
 	body("name")
 		.trim()
-		.notEmpty()
-		.withMessage("Name cannot be empty")
 		.isAlpha("en-IN", { ignore: "s" })
 		.withMessage("Name can only contain alphabets")
 		.escape(),
-	body("description")
-		.trim()
-		.notEmpty()
-		.withMessage("Description cannot be empty"),
+	body("description").trim(),
 ];
 
-module.exports = { createRules };
+module.exports = { createRules, updateRules };
