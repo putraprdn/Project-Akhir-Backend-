@@ -198,19 +198,6 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
-            # securityDefinitions:
-            #     google_oauth:
-            #         type: oauth2
-            #         description: Google OAuth
-            #         flow:
-            #             implicit:
-            #                 clientCredentials:
-            #                     authorizationUrl: https://accounts.google.com/o/oauth2/v2/auth
-            #                     tokenUrl: https://www.googleapis.com/oauth2/v4/token
-            #                     x-tokenName: 363070336389-u43tasrbhkpjauvrcbemuk84fotrp5eq.apps.googleusercontent.com
-            #                     scopes:
-            #                         read:profile: read user profile
-            #                         read:email: read user email
 
     /user/auth/facebook:
         get:
@@ -228,19 +215,6 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
-            # securityDefinitions:
-            #     google_oauth:
-            #         type: oauth2
-            #         description: Google OAuth
-            #         flow:
-            #             implicit:
-            #                 clientCredentials:
-            #                     authorizationUrl: https://accounts.google.com/o/oauth2/v2/auth
-            #                     tokenUrl: https://www.googleapis.com/oauth2/v4/token
-            #                     x-tokenName: 363070336389-u43tasrbhkpjauvrcbemuk84fotrp5eq.apps.googleusercontent.com
-            #                     scopes:
-            #                         read:profile: read user profile
-            #                         read:email: read user email
 
     # --- CATEGORY
     /api/category/list:
@@ -441,7 +415,6 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-    # !!!
     /api/product/create:
         post:
             tags:
@@ -577,26 +550,30 @@ paths:
         put:
             tags:
                 - "product"
-            summary: "Product update (blm fix apa aja yg bisa diupdate nantinya)"
+            summary: "Product update (tunggu request dari tim fe)"
             description: ""
             produces:
                 - "application/json"
             parameters:
                 - name: "productId"
                   in: "path"
-                  required: true
                   type: "integer"
                   format: "int64"
-                - name: "body"
-                  in: "body"
-                  required: true
-                  schema:
-                      type: "object"
-                      properties: # properties blm lengkap
-                          name:
-                              type: "string"
-                          description:
-                              type: "string"
+                - name: image
+                  in: formData
+                  type: file
+                - name: name
+                  in: formData
+                  type: string
+                - name: description
+                  in: formData
+                  type: string
+                - name: price
+                  in: formData
+                  type: integer
+                - name: categoryId
+                  in: formData
+                  type: integer
             responses:
                 "200":
                     description: "OK"
@@ -605,6 +582,9 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
+
+            security:
+                - bearerAuth: []
 
     /api/product/delete/{productId}:
         delete:
@@ -639,9 +619,8 @@ paths:
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
 
-            # Blm pake jwt
-            # security:
-            #     - bearerAuth: []
+            security:
+                - bearerAuth: []
 
     # --- OFFER
     /api/offer/list:
@@ -951,17 +930,14 @@ definitions:
                 type: "string"
             soldTo:
                 type: "string"
-                default: null
             soldPrice:
                 type: "integer"
-                default: null
             isSold:
                 type: "boolean"
-                default: null
+                default: false
             soldAt:
                 type: "string"
                 format: "date-time"
-                default: null
             isAvailable:
                 type: "boolean"
                 default: true
@@ -971,10 +947,25 @@ definitions:
             updatedAt:
                 type: "string"
                 format: "date-time"
+            seller:
+                type: "object"
+                properties:
+                    name:
+                        type: "string"
+                    email:
+                        type: "string"
+                    city:
+                        type: "string"
+                    address:
+                        type: "string"
+                    phoneNumber:
+                        type: "string"
+                    image:
+                        type: "string"
             images:
                 type: "array"
                 items:
-                    type: object
+                    type: "object"
                     properties:
                         id:
                             type: "integer"
@@ -1034,7 +1025,6 @@ definitions:
                         default: {}
                     message:
                         type: "string"
-                        # default: {}
                     data:
                         type: "boolean"
                         default: null
