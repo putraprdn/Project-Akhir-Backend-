@@ -5,21 +5,42 @@ module.exports = {
 	// Show all products
 	list: async (req, res) => {
 		try {
-			const products = await model.product.findAll({
+			const products = await model.product.findAll(
+				{
 				include: [
 					{
 						model: model.user,
 						as: "seller",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{ model: model.productImage },
 				],
-			});
+				},
+				{
+					where: {
+						isAvailable: true,
+					},
+				}
+			);
 
 			const datas = products.map((product) => ({
 				id: product.id,
@@ -35,6 +56,8 @@ module.exports = {
 				isAvailable: product.isAvailable,
 				createdAt: product.createdAt,
 				updatedAt: product.updatedAt,
+				seller: product.seller,
+				buyer: product?.buyer || {},
 				images: product.productImages,
 			}));
 
@@ -56,7 +79,8 @@ module.exports = {
 	// Show a product by id
 	findById: async (req, res) => {
 		try {
-			const product = await model.product.findOne({
+			const product = await model.product.findOne(
+				{
 				where: {
 					id: req.params.id,
 				},
@@ -64,18 +88,38 @@ module.exports = {
 					{
 						model: model.user,
 						as: "seller",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{ model: model.productImage },
 				],
-			});
+				},
+				{
+					where: {
+						isAvailable: true,
+					},
+				}
+			);
 
-			if (product < 1) throw new Error("data empty");
+			if (!product) throw new Error("Product not found");
 
 			const data = {
 				id: product.id,
@@ -91,6 +135,8 @@ module.exports = {
 				isAvailable: product.isAvailable,
 				createdAt: product.createdAt,
 				updatedAt: product.updatedAt,
+				seller: product.seller,
+				buyer: product?.buyer || {},
 				images: product.productImages,
 			};
 
@@ -112,7 +158,8 @@ module.exports = {
 	// Show a product by name
 	findByName: async (req, res) => {
 		try {
-			const product = await model.product.findOne({
+			const product = await model.product.findOne(
+				{
 				where: {
 					name: req.params.name,
 				},
@@ -120,18 +167,38 @@ module.exports = {
 					{
 						model: model.user,
 						as: "seller",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{ model: model.productImage },
 				],
-			});
+				},
+				{
+					where: {
+						isAvailable: true,
+					},
+				}
+			);
 
-			if (product < 1) throw new Error("data empty");
+			if (!product) throw new Error("Product not found");
 
 			const data = {
 				id: product.id,
@@ -147,6 +214,8 @@ module.exports = {
 				isAvailable: product.isAvailable,
 				createdAt: product.createdAt,
 				updatedAt: product.updatedAt,
+				seller: product.seller,
+				buyer: product?.buyer || {},
 				images: product.productImages,
 			};
 
@@ -168,7 +237,8 @@ module.exports = {
 	// Show a product by category
 	findByCategory: async (req, res) => {
 		try {
-			const products = await model.product.findAll({
+			const products = await model.product.findAll(
+				{
 				where: {
 					categoryId: req.params.categoryId,
 				},
@@ -176,16 +246,36 @@ module.exports = {
 					{
 						model: model.user,
 						as: "seller",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-						attributes: ["email"],
+							attributes: [
+								"name",
+								"email",
+								"city",
+								"address",
+								"phoneNumber",
+								"image",
+							],
 					},
 					{ model: model.productImage },
 				],
-			});
+				},
+				{
+					where: {
+						isAvailable: true,
+					},
+				}
+			);
 
 			const datas = products.map((product) => ({
 				id: product.id,
@@ -201,6 +291,8 @@ module.exports = {
 				isAvailable: product.isAvailable,
 				createdAt: product.createdAt,
 				updatedAt: product.updatedAt,
+				seller: product.seller,
+				buyer: product?.buyer || {},
 				images: product.productImages,
 			}));
 
@@ -262,12 +354,26 @@ module.exports = {
 					{
 						model: model.user,
 						as: "seller",
-						attributes: ["email"],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-						attributes: ["email"],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{ model: model.productImage },
 				],
@@ -287,6 +393,8 @@ module.exports = {
 				isAvailable: getProduct.isAvailable,
 				createdAt: getProduct.createdAt,
 				updatedAt: getProduct.updatedAt,
+				seller: getProduct.seller,
+				buyer: getProduct?.buyer || {},
 				images: getProduct.productImages,
 			};
 
@@ -305,8 +413,7 @@ module.exports = {
 			});
 		}
 	},
-
-	// Update a product
+	// Update a product !!!! Masih blm fix
 	update: async (req, res) => {
 		try {
 			const { path, filename } = req.file;
@@ -352,13 +459,35 @@ module.exports = {
 	// Delete a product
 	destroy: async (req, res) => {
 		try {
-			const product = await model.product.destroy({
+			const userId = res.locals.user.id;
+			const productId = req.params.id;
+
+			const productOwnedAndExists = await model.product.findOne({
 				where: {
-					id: req.params.id,
+					id: productId,
+					createdBy: userId,
+					isAvailable: true,
 				},
 			});
 
-			if (product < 1) throw new Error("data empty");
+			// check if product exists & belong to the user
+			if (!productOwnedAndExists)
+				throw new Error(
+					"Failed to delete product because it doesn't exists or you have no access"
+				);
+
+			const product = await model.product.update(
+				{
+					isAvailable: false,
+				},
+				{
+					where: {
+						id: productId,
+					},
+				}
+			);
+
+			if (!product) throw new Error("Failed to delete product");
 
 			res.status(200).json({
 				success: true,

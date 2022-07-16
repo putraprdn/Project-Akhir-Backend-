@@ -138,8 +138,8 @@ module.exports = {
 			let tokenHeader = JSON.stringify(req.headers.authorization);
 			tokenHeader = tokenHeader.replaceAll('"', "");
 			const { email, id } = res.locals.user;
-			console.log(`tokenParam:\n${tokenParam}`);
-			console.log(`tokenHeader:\n${tokenHeader}`);
+			// console.log(`tokenParam:\n${tokenParam}`);
+			// console.log(`tokenHeader:\n${tokenHeader}`);
 			if (tokenHeader !== tokenParam) {
 				throw new Error("Unauthorized access");
 			}
