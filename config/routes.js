@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const controllers = require("../app/controllers");
 const middlewares = require("../app/middleware");
 const validators = require("../app/validators");
@@ -41,6 +42,9 @@ const apiDocs = YAML.load("./api-doc.yaml");
 
 // const appRouter = express.Router();
 const apiRouter = express.Router();
+
+// user cors
+apiRouter.use(cors());
 
 // Configuration for Facebook Auth
 require("../app/middleware/facebookAuth");

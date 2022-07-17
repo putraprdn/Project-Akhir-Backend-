@@ -80,22 +80,36 @@ module.exports = {
 	// update data
 	update: async (req, res) => {
 		try {
-			let data = await model.category.update(
+			const categoryId = req.params.id;
+
+			const getCategory = await model.category.findOne({
+				where: {
+					id: categoryId,
+				},
+			});
+
+			if (!getCategory) throw new Error("Category doesn't exists");
+
+			const name = req.body?.name || getCategory.name;
+			const description =
+				req.body?.description || getCategory.description;
+
+			let category = await model.category.update(
 				{
-					name: req.body.name,
-					description: req.body.description,
+					name: name,
+					description: description,
 				},
 				{
 					where: {
-						id: req.params.id,
+						id: categoryId,
 					},
 				}
 			);
 
 			// if id not found
-			if (data < 1) throw new Error("data not found");
+			if (!category) throw new Error("data not found");
 
-			data = await model.category.findOne({
+			category = await model.category.findOne({
 				where: { id: req.params.id },
 			});
 
@@ -103,7 +117,7 @@ module.exports = {
 				success: true,
 				error: 0,
 				message: "data success updated",
-				data: data,
+				data: category,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -118,20 +132,30 @@ module.exports = {
 	// delete data
 	destroy: async (req, res) => {
 		try {
-			const data = await model.category.destroy({
+			const categoryId = req.params.id;
+
+			const getCategory = await model.category.findOne({
+				where: {
+					id: categoryId,
+				},
+			});
+
+			if (!getCategory) throw new Error("Category doesn't exists");
+
+			const category = await model.category.destroy({
 				where: {
 					id: req.params.id,
 				},
 			});
 
 			// if id not found
-			if (!data) throw new Error("data not found");
+			if (!category) throw new Error("Failed to delete category");
 
 			return res.status(200).json({
 				success: true,
 				error: 0,
 				message: "data success deleted",
-				data: data,
+				// data: data, 	// gk perlu return data krn sudah dihapus
 			});
 		} catch (error) {
 			return res.status(500).json({
