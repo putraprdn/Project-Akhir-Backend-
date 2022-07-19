@@ -4,7 +4,7 @@ module.exports = {
 	// add data category
 	create: async (req, res) => {
 		try {
-			const data = await model.category.create({
+			const category = await model.category.create({
 				name: req.body.name,
 				description: req.body.description,
 			});
@@ -12,8 +12,8 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success created",
-				data: data,
+				message: "Category created",
+				data: category,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -28,16 +28,13 @@ module.exports = {
 	// show all datas
 	list: async (req, res) => {
 		try {
-			const datas = await model.category.findAll();
-
-			// if data empty
-			if (datas < 1) throw new Error("data empty");
+			const categories = await model.category.findAll();
 
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data listed",
-				data: datas,
+				message: "Categories listed",
+				data: categories,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -52,20 +49,20 @@ module.exports = {
 	// find data by Id
 	findById: async (req, res) => {
 		try {
-			const data = await model.category.findOne({
+			const category = await model.category.findOne({
 				where: {
 					id: req.params.id,
 				},
 			});
 
 			// if id not found
-			if (!data) throw new Error("data not found");
+			if (!category) throw new Error("Category doesn't exists");
 
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success listed",
-				data: data,
+				message: "Category found",
+				data: category,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -88,6 +85,7 @@ module.exports = {
 				},
 			});
 
+			// if id not found
 			if (!getCategory) throw new Error("Category doesn't exists");
 
 			const name = req.body?.name || getCategory.name;
@@ -106,9 +104,6 @@ module.exports = {
 				}
 			);
 
-			// if id not found
-			if (!category) throw new Error("data not found");
-
 			category = await model.category.findOne({
 				where: { id: req.params.id },
 			});
@@ -116,7 +111,7 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success updated",
+				message: "Category successfully updated",
 				data: category,
 			});
 		} catch (error) {
@@ -154,7 +149,7 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success deleted",
+				message: "Category successfully deleted",
 				// data: data, 	// gk perlu return data krn sudah dihapus
 			});
 		} catch (error) {

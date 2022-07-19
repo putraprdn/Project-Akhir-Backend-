@@ -17,10 +17,11 @@ const createRules = [
 const updateRules = [
 	body("name")
 		.trim()
-		.isAlpha("en-IN", { ignore: "s" })
+		.isAlpha("en-IN", { ignore: ["s", "", " "] })
 		.withMessage("Name can only contain alphabets")
-		.escape(),
-	body("description").trim(),
+		.escape()
+		.optional({ nullable: true }),
+	body("description").trim().optional({ nullable: true }),
 ];
 
 module.exports = { createRules, updateRules };

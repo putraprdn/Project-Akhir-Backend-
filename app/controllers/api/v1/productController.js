@@ -1,46 +1,43 @@
 const model = require("../../../models");
 const cloudinary = require("../../../../config/cloudinary");
+const { Op } = require("sequelize");
 
 module.exports = {
 	// Show all products
 	list: async (req, res) => {
 		try {
-			const products = await model.product.findAll(
-				{
+			const products = await model.product.findAll({
+				where: {
+					isAvailable: true,
+				},
 				include: [
 					{
 						model: model.user,
 						as: "seller",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{ model: model.productImage },
 				],
-				},
-				{
-					where: {
-						isAvailable: true,
-					},
-				}
-			);
+			});
 
 			const datas = products.map((product) => ({
 				id: product.id,
@@ -79,45 +76,39 @@ module.exports = {
 	// Show a product by id
 	findById: async (req, res) => {
 		try {
-			const product = await model.product.findOne(
-				{
+			const product = await model.product.findOne({
 				where: {
 					id: req.params.id,
+					isAvailable: true,
 				},
 				include: [
 					{
 						model: model.user,
 						as: "seller",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{ model: model.productImage },
 				],
-				},
-				{
-					where: {
-						isAvailable: true,
-					},
-				}
-			);
+			});
 
 			if (!product) throw new Error("Product not found");
 
@@ -158,49 +149,45 @@ module.exports = {
 	// Show a product by name
 	findByName: async (req, res) => {
 		try {
-			const product = await model.product.findOne(
-				{
+			const products = await model.product.findAll({
 				where: {
-					name: req.params.name,
+					name: {
+						[Op.substring]: req.params.name,
+					},
+					isAvailable: true,
 				},
 				include: [
 					{
 						model: model.user,
 						as: "seller",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{ model: model.productImage },
 				],
-				},
-				{
-					where: {
-						isAvailable: true,
-					},
-				}
-			);
+			});
 
-			if (!product) throw new Error("Product not found");
+			if (!products) throw new Error("Product not found");
 
-			const data = {
+			const datas = products.map((product) => ({
 				id: product.id,
 				name: product.name,
 				description: product.description,
@@ -217,13 +204,13 @@ module.exports = {
 				seller: product.seller,
 				buyer: product?.buyer || {},
 				images: product.productImages,
-			};
+			}));
 
 			res.status(200).json({
 				success: true,
 				error: 0,
 				message: "Product found",
-				data: data,
+				data: datas,
 			});
 		} catch (error) {
 			res.status(500).json({
@@ -237,45 +224,39 @@ module.exports = {
 	// Show a product by category
 	findByCategory: async (req, res) => {
 		try {
-			const products = await model.product.findAll(
-				{
+			const products = await model.product.findAll({
 				where: {
 					categoryId: req.params.categoryId,
+					isAvailable: true,
 				},
 				include: [
 					{
 						model: model.user,
 						as: "seller",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{
 						model: model.user,
 						as: "buyer",
-							attributes: [
-								"name",
-								"email",
-								"city",
-								"address",
-								"phoneNumber",
-								"image",
-							],
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
 					},
 					{ model: model.productImage },
 				],
-				},
-				{
-					where: {
-						isAvailable: true,
-					},
-				}
-			);
+			});
 
 			const datas = products.map((product) => ({
 				id: product.id,
@@ -318,6 +299,15 @@ module.exports = {
 			const userId = res.locals.user.id;
 			const images = req.files;
 
+			// check category if exists in db
+			const categoryExists = await model.category.findOne({
+				where: { id: categoryId },
+			});
+
+			if (!categoryExists)
+				throw new Error("This category doesn't exists");
+
+			// create product
 			const product = await model.product.create({
 				name,
 				description,
@@ -492,8 +482,8 @@ module.exports = {
 			res.status(200).json({
 				success: true,
 				error: 0,
-				message: "Product deleted",
-				data: product,
+				message: `Product successfully deleted`,
+				// data: product,
 			});
 		} catch (error) {
 			res.status(500).json({
