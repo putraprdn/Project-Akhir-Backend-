@@ -266,6 +266,11 @@ apiRouter.get(
 	"/api/offer/product/:productId",
 	controllers.api.v1.offerController.findByProduct
 );
+// Delete an offer
+apiRouter.delete(
+	"/api/offer/delete/:id",
+	controllers.api.v1.offerController.destroy
+);
 
 /**
  * Error handler

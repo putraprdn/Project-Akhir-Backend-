@@ -1,14 +1,16 @@
+const { Op } = require("sequelize");
 const model = require("../../../models");
+const status = ["REJECTED", "ACCEPTED", "PENDING"];
 
 module.exports = {
 	// show all offers
 	list: async (req, res) => {
 		try {
-			const offers = await model.offer.findAll({
+			let offers = await model.offer.findAll({
 				include: ["user"],
 			});
 
-			const datas = offers.map((offer) => ({
+			offers = offers.map((offer) => ({
 				id: offer.id,
 				productId: offer.productId,
 				createdBy: offer.user.email,
@@ -21,8 +23,8 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data listed",
-				data: datas,
+				message: "Offers successfully listed",
+				data: offers,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -37,12 +39,30 @@ module.exports = {
 	// create offer
 	create: async (req, res) => {
 		try {
-			const product = await model.product.findOne({
-				where: { id: req.params.id },
-			});
-
-			const productPrice = product.price;
+			const productId = req.params.id;
+			const userId = res.locals.user.id;
 			const offerPrice = req.body.price;
+
+			// get offer & check if there is an active (accepted or pending) offer from the same user
+			const duplicateOffer = await model.offer.findOne({
+				where: {
+					productId: productId,
+					createdBy: userId,
+					status: {
+						[Op.or]: [status[2], status[1]], // pending or accepted
+					},
+				},
+			});
+			if (duplicateOffer)
+				throw new Error(
+					"You've already made an offer for this product"
+				);
+
+			// get product
+			const product = await model.product.findOne({
+				where: { id: productId },
+			});
+			const productPrice = product.price;
 
 			// check is offer < 50% of product price
 			if (offerPrice < (productPrice * 50) / 100)
@@ -50,15 +70,15 @@ module.exports = {
 
 			// check is offer > product
 			if (offerPrice > productPrice)
-				throw new Error(`Offer cannot bigger than Rp.${productPrice}`);
+				throw new Error(`Offer cannot bigger than product price`);
 
 			let offer = await model.offer.create({
-				productId: req.params.id,
-				createdBy: res.locals.user.id,
+				productId: productId,
+				createdBy: userId,
 				price: req.body.price,
 			});
 
-			if (!offer) throw new Error("Failed to create data");
+			if (!offer) throw new Error("Failed to create an offer");
 
 			offer = await model.offer.findOne({
 				where: {
@@ -67,7 +87,7 @@ module.exports = {
 				include: ["user"],
 			});
 
-			const data = {
+			const getOffer = {
 				id: offer.id,
 				productId: offer.productId,
 				createdBy: offer.user.email,
@@ -80,8 +100,8 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data created",
-				data: data,
+				message: "Offer successfully created",
+				data: getOffer,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -93,29 +113,28 @@ module.exports = {
 		}
 	},
 
-	/**
-	 * update offer (only accept 2 requests => [0, 1])
-	 * 0 => Reject offer
-	 * 1 => Accept offer
-	 */
 	update: async (req, res) => {
+		/**
+		 * update offer (only accept 2 requests => [0, 1])
+		 * 0 => Reject offer
+		 * 1 => Accept offer
+		 */
 		try {
-			const status = ["REJECTED", "ACCEPTED"];
-
 			const response = status[req.body.status];
+			const offerId = req.params.id;
 
 			let offer = await model.offer.findOne({
 				where: {
-					id: req.params.id,
+					id: offerId,
 				},
 				include: ["user"],
 			});
 
 			// if id not found
-			if (!offer) throw new Error("data not found");
+			if (!offer) throw new Error("Offer doesn't exist");
 
 			// throw error if response neither 0 nor 1
-			if (!response) throw new Error("Invalid input!");
+			if (!response) throw new Error("Invalid input");
 
 			// if an offer is ACCEPTED, auto change status of the rest of the offers to REJECTED
 			if (req.body.status == 1) {
@@ -126,7 +145,7 @@ module.exports = {
 					{
 						where: {
 							productId: offer.productId,
-							status: "PENDING",
+							status: status[2], // set status to PENDING
 						},
 					}
 				);
@@ -138,19 +157,19 @@ module.exports = {
 				},
 				{
 					where: {
-						id: req.params.id,
+						id: offerId,
 					},
 				}
 			);
 
 			offer = await model.offer.findOne({
 				where: {
-					id: req.params.id,
+					id: offerId,
 				},
 				include: ["user"],
 			});
 
-			const data = {
+			const getOffer = {
 				id: offer.id,
 				productId: offer.productId,
 				createdBy: offer.user.email,
@@ -163,8 +182,8 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data updated",
-				data,
+				message: "Offer successfully updated",
+				data: getOffer,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -176,20 +195,21 @@ module.exports = {
 		}
 	},
 
-	// find data by id
+	// find offer by id
 	findById: async (req, res) => {
 		try {
+			const offerId = req.params.id;
 			const offer = await model.offer.findOne({
 				where: {
-					id: req.params.id,
+					id: offerId,
 				},
 				include: ["user"],
 			});
 
 			// if id not found
-			if (!offer) throw new Error("data not found");
+			if (!offer) throw new Error("Offer doesn't exist");
 
-			const data = {
+			const getOffer = {
 				id: offer.id,
 				productId: offer.productId,
 				createdBy: offer.user.email,
@@ -202,8 +222,8 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success listed",
-				data,
+				message: "Offer successfully listed",
+				data: getOffer,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -221,21 +241,20 @@ module.exports = {
 			let tokenHeader = JSON.stringify(req.headers.authorization);
 			tokenHeader = tokenHeader.replaceAll('"', "");
 			const tokenParam = req.params.token;
+			const userId = res.locals.user.id;
+
 			if (tokenHeader !== tokenParam) {
 				throw new Error("Unauthorized access");
 			}
 
 			const offers = await model.offer.findAll({
 				where: {
-					createdBy: res.locals.user.id,
+					createdBy: userId,
 				},
 				include: ["user"],
 			});
 
-			// if id not found
-			// if (!offer) throw new Error("data not found");
-
-			const datas = offers.map((offer) => ({
+			const getAllOffers = offers.map((offer) => ({
 				id: offer.id,
 				productId: offer.productId,
 				createdBy: offer.user.email,
@@ -248,8 +267,8 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success listed",
-				data: datas,
+				message: "Offers successfully listed",
+				data: getAllOffers,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -264,17 +283,16 @@ module.exports = {
 	// find data by product id
 	findByProduct: async (req, res) => {
 		try {
+			const productId = req.params.productId;
+
 			const offers = await model.offer.findAll({
 				where: {
-					productId: req.params.productId,
+					productId: productId,
 				},
 				include: ["user"],
 			});
 
-			// if id not found
-			// if (!offer) throw new Error("data not found");
-
-			const datas = offers.map((offer) => ({
+			const getAllOffers = offers.map((offer) => ({
 				id: offer.id,
 				productId: offer.productId,
 				createdBy: offer.user.email,
@@ -287,8 +305,39 @@ module.exports = {
 			return res.status(200).json({
 				success: true,
 				error: 0,
-				message: "data success listed",
-				data: datas,
+				message: "Offers successfully listed",
+				data: getAllOffers,
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				error: error,
+				message: error.message,
+				data: null,
+			});
+		}
+	},
+
+	// delete an offer
+	destroy: async (req, res) => {
+		try {
+			const offerId = req.params.id;
+
+			let offer = await model.offer.findOne({
+				where: {
+					id: offerId,
+				},
+			});
+
+			// if id not found
+			if (!offer) throw new Error("Offer not found or already deleted");
+
+			offer = await model.offer.destroy({ where: { id: offerId } });
+
+			return res.status(200).json({
+				success: true,
+				error: 0,
+				message: "Offer successfully deleted",
 			});
 		} catch (error) {
 			return res.status(500).json({
