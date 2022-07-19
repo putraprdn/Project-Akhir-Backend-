@@ -299,13 +299,13 @@ module.exports = {
 			const userId = res.locals.user.id;
 			const images = req.files;
 
-			// check category if exists in db
+			// check category if exist in db
 			const categoryExists = await model.category.findOne({
 				where: { id: categoryId },
 			});
 
 			if (!categoryExists)
-				throw new Error("This category doesn't exists");
+				throw new Error("This category doesn't exist");
 
 			// create product
 			const product = await model.product.create({
@@ -460,10 +460,10 @@ module.exports = {
 				},
 			});
 
-			// check if product exists & belong to the user
+			// check if product exist & belong to the user
 			if (!productOwnedAndExists)
 				throw new Error(
-					"Failed to delete product because it doesn't exists or you have no access"
+					"Failed to delete product because it doesn't exist or you have no access"
 				);
 
 			const product = await model.product.update(

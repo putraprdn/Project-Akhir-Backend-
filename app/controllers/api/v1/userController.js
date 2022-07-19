@@ -209,7 +209,7 @@ module.exports = {
 				},
 			});
 
-			// check if id exists in database
+			// check if id exist in database
 			if (!isUserExist) throw new Error("User doesn't exist!");
 
 			await model.user.update(
@@ -278,7 +278,7 @@ module.exports = {
 				},
 			});
 
-			// check if id exists in database
+			// check if id exist in database
 			if (!isUserExist) throw new Error("User doesn't exist!");
 
 			// check if token's payload is the same user

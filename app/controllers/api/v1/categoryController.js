@@ -56,7 +56,7 @@ module.exports = {
 			});
 
 			// if id not found
-			if (!category) throw new Error("Category doesn't exists");
+			if (!category) throw new Error("Category doesn't exist");
 
 			return res.status(200).json({
 				success: true,
@@ -86,7 +86,7 @@ module.exports = {
 			});
 
 			// if id not found
-			if (!getCategory) throw new Error("Category doesn't exists");
+			if (!getCategory) throw new Error("Category doesn't exist");
 
 			const name = req.body?.name || getCategory.name;
 			const description =
@@ -135,7 +135,7 @@ module.exports = {
 				},
 			});
 
-			if (!getCategory) throw new Error("Category doesn't exists");
+			if (!getCategory) throw new Error("Category doesn't exist");
 
 			const category = await model.category.destroy({
 				where: {

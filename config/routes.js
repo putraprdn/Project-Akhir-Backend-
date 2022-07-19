@@ -240,20 +240,20 @@ apiRouter.delete(
  */
 //Get all offers
 apiRouter.get("/api/offer/list", controllers.api.v1.offerController.list);
-//Create an offers
+//Create an offer
 apiRouter.post(
 	"/api/offer/create/:id",
 	middlewares.checkToken,
 	validators.validate(validators.offerValidator.createRules),
 	controllers.api.v1.offerController.create
 );
-//Update an offers
+//Update an offer
 apiRouter.put(
 	"/api/offer/update/:id",
 	validators.validate(validators.offerValidator.updateRules),
 	controllers.api.v1.offerController.update
 );
-//Get an offers
+//Get an offer
 apiRouter.get("/api/offer/:id", controllers.api.v1.offerController.findById);
 //Get all offers by user token
 apiRouter.get(
