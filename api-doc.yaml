@@ -67,6 +67,7 @@ paths:
 
             security:
                 - bearerAuth: []
+                
     /api/user/register:
         post:
             tags:
@@ -540,7 +541,21 @@ paths:
             responses:
                 "200":
                     description: "OK"
-                    $ref: "#/definitions/productSchema"
+                    schema:
+                        items:
+                            type: "object"
+                            properties:
+                                success:
+                                    type: "boolean"
+                                error:
+                                    type: "integer"
+                                message:
+                                    type: "string"
+                                data:
+                                    type: "array"
+                                    items:
+                                        type: "object"
+                                        $ref: "#/definitions/productProps"
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
@@ -550,7 +565,7 @@ paths:
         put:
             tags:
                 - "product"
-            summary: "Product update (tunggu request dari tim fe)"
+            summary: "!! Product update (tunggu request dari tim fe)"
             description: ""
             produces:
                 - "application/json"
@@ -586,11 +601,12 @@ paths:
             security:
                 - bearerAuth: []
 
+    # blm diupdate cascade-nya
     /api/product/delete/{productId}:
         delete:
             tags:
                 - "product"
-            summary: "Product delete"
+            summary: "!! Product delete (sementara blm bisa dipakai)"
             description: ""
             produces:
                 - "application/json"
@@ -872,6 +888,8 @@ definitions:
                             updatedAt:
                                 type: "string"
                                 format: "date-time"
+                    token:
+                        type: "string"
     categorySchema:
         schema:
             items:
