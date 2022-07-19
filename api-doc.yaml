@@ -844,6 +844,28 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
+    
+    /api/offer/delete/{offerId}:
+        delete:
+            tags:
+                - "offer"
+            summary: "Delete an offer by id"
+            description: ""
+            produces:
+                - "application/json"
+            parameters:
+                - name: "offerId"
+                  in: "path"
+                  required: true
+                  type: "integer"
+                  format: "int64"
+            responses:
+                "200":
+                    description: "OK"
+                    $ref: "#/definitions/offerSchema"
+                "500":
+                    description: "Server Error"
+                    $ref: "#/definitions/errorSchema"
 
 # Authorization
 securityDefinitions:
