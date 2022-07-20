@@ -2,22 +2,39 @@ const { Op } = require("sequelize");
 const model = require("../../../models");
 const status = ["REJECTED", "ACCEPTED", "PENDING"];
 
+/**
+ * !!!! -------------- VALIDATOR BLM AKTIF (UPDATE OFFER)
+ *  TUNGGU FINAL BARU UPDATE
+ */
+
 module.exports = {
 	// show all offers
 	list: async (req, res) => {
 		try {
 			let offers = await model.offer.findAll({
-				include: ["user"],
+				include: [
+					{
+						model: model.user,
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
+					},
+				],
 			});
 
 			offers = offers.map((offer) => ({
 				id: offer.id,
 				productId: offer.productId,
-				createdBy: offer.user.email,
 				price: offer.price,
 				status: offer.status,
 				createdAt: offer.createdAt,
 				updatedAt: offer.updatedAt,
+				createdBy: offer.user,
 			}));
 
 			return res.status(200).json({
@@ -84,17 +101,29 @@ module.exports = {
 				where: {
 					id: offer.id,
 				},
-				include: ["user"],
+				include: [
+					{
+						model: model.user,
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
+					},
+				],
 			});
 
 			const getOffer = {
 				id: offer.id,
 				productId: offer.productId,
-				createdBy: offer.user.email,
 				price: offer.price,
 				status: offer.status,
 				createdAt: offer.createdAt,
 				updatedAt: offer.updatedAt,
+				createdBy: offer.user,
 			};
 
 			return res.status(200).json({
@@ -122,22 +151,23 @@ module.exports = {
 		try {
 			const response = status[req.body.status];
 			const offerId = req.params.id;
+			const offerStatus = req.body.status;
 
+			// get offer id
 			let offer = await model.offer.findOne({
 				where: {
 					id: offerId,
 				},
-				include: ["user"],
 			});
 
 			// if id not found
 			if (!offer) throw new Error("Offer doesn't exist");
 
 			// throw error if response neither 0 nor 1
-			if (!response) throw new Error("Invalid input");
+			if (!response) throw new Error("Status is invalid");
 
 			// if an offer is ACCEPTED, auto change status of the rest of the offers to REJECTED
-			if (req.body.status == 1) {
+			if (offerStatus == 1) {
 				await model.offer.update(
 					{
 						status: status[0],
@@ -145,12 +175,13 @@ module.exports = {
 					{
 						where: {
 							productId: offer.productId,
-							status: status[2], // set status to PENDING
+							status: status[2], // PENDING
 						},
 					}
 				);
 			}
 
+			// update offer status to ACCEPTED
 			await model.offer.update(
 				{
 					status: response,
@@ -162,21 +193,34 @@ module.exports = {
 				}
 			);
 
+			// get offer
 			offer = await model.offer.findOne({
 				where: {
 					id: offerId,
 				},
-				include: ["user"],
+				include: [
+					{
+						model: model.user,
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
+					},
+				],
 			});
 
 			const getOffer = {
 				id: offer.id,
 				productId: offer.productId,
-				createdBy: offer.user.email,
 				price: offer.price,
 				status: offer.status,
 				createdAt: offer.createdAt,
 				updatedAt: offer.updatedAt,
+				createdBy: offer.user,
 			};
 
 			return res.status(200).json({
@@ -203,7 +247,19 @@ module.exports = {
 				where: {
 					id: offerId,
 				},
-				include: ["user"],
+				include: [
+					{
+						model: model.user,
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
+					},
+				],
 			});
 
 			// if id not found
@@ -212,11 +268,11 @@ module.exports = {
 			const getOffer = {
 				id: offer.id,
 				productId: offer.productId,
-				createdBy: offer.user.email,
 				price: offer.price,
 				status: offer.status,
 				createdAt: offer.createdAt,
 				updatedAt: offer.updatedAt,
+				createdBy: offer.user,
 			};
 
 			return res.status(200).json({
@@ -251,17 +307,29 @@ module.exports = {
 				where: {
 					createdBy: userId,
 				},
-				include: ["user"],
+				include: [
+					{
+						model: model.user,
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
+					},
+				],
 			});
 
 			const getAllOffers = offers.map((offer) => ({
 				id: offer.id,
 				productId: offer.productId,
-				createdBy: offer.user.email,
 				price: offer.price,
 				status: offer.status,
 				createdAt: offer.createdAt,
 				updatedAt: offer.updatedAt,
+				createdBy: offer.user,
 			}));
 
 			return res.status(200).json({
@@ -289,17 +357,29 @@ module.exports = {
 				where: {
 					productId: productId,
 				},
-				include: ["user"],
+				include: [
+					{
+						model: model.user,
+						attributes: [
+							"name",
+							"email",
+							"city",
+							"address",
+							"phoneNumber",
+							"image",
+						],
+					},
+				],
 			});
 
 			const getAllOffers = offers.map((offer) => ({
 				id: offer.id,
 				productId: offer.productId,
-				createdBy: offer.user.email,
 				price: offer.price,
 				status: offer.status,
 				createdAt: offer.createdAt,
 				updatedAt: offer.updatedAt,
+				createdBy: offer.user,
 			}));
 
 			return res.status(200).json({
