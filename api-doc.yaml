@@ -188,7 +188,7 @@ paths:
             tags:
                 - "user"
             summary: "Ini google auth-nya udh bisa tapi gatau cara konek ke swaggernya hehe. Lansung aja pake link yang ada di bawah"
-            description: "[https://pa-be-k3.herokuapp.com/user/auth/google](https://pa-be-k3.herokuapp.com/user/auth/google) klo muncul error url mismatch coba lagi dibuka ulang linknya"
+            description: "[https://new-pa-be-k3.herokuapp.com/user/auth/google](https://new-pa-be-k3.herokuapp.com/user/auth/google) klo muncul error url mismatch coba lagi dibuka ulang linknya"
             produces:
                 - "application/json"
             responses:
@@ -205,7 +205,7 @@ paths:
             tags:
                 - "user"
             summary: "Ini juga sama lansung aja pake link yang ada di bawah"
-            description: "[https://pa-be-k3.herokuapp.com/user/auth/facebook](https://pa-be-k3.herokuapp.com/user/auth/facebook) klo muncul error coba lagi dibuka ulang linknya"
+            description: "[https://new-pa-be-k3.herokuapp.com/user/auth/facebook](https://new-pa-be-k3.herokuapp.com/user/auth/facebook) klo muncul error coba lagi dibuka ulang linknya"
             produces:
                 - "application/json"
             responses:
@@ -744,7 +744,7 @@ paths:
         put:
             tags:
                 - "offer"
-            summary: "Offer update"
+            summary: "Offer update (Careful, can't change after ACCEPTING an offer)"
             description: "Input only accept 0 or 1 [0: REJECTED, 1: ACCEPTED]"
             produces:
                 - "application/json"
@@ -770,6 +770,9 @@ paths:
                 "500":
                     description: "Server Error"
                     $ref: "#/definitions/errorSchema"
+
+            security:
+                - bearerAuth: []
 
     /api/offer/user/{userToken}:
         get:
