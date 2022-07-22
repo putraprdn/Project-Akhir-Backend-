@@ -250,6 +250,7 @@ apiRouter.post(
 //Update an offer
 apiRouter.put(
 	"/api/offer/update/:id",
+	middlewares.checkToken,
 	validators.validate(validators.offerValidator.updateRules),
 	controllers.api.v1.offerController.update
 );

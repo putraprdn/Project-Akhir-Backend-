@@ -152,6 +152,7 @@ module.exports = {
 			const response = status[req.body.status];
 			const offerId = req.params.id;
 			const offerStatus = req.body.status;
+			const userId = res.locals.user.id;
 
 			// get offer id
 			let offer = await model.offer.findOne({
@@ -166,7 +167,7 @@ module.exports = {
 			// throw error if response neither 0 nor 1
 			if (!response) throw new Error("Status is invalid");
 
-			// if an offer is ACCEPTED, auto change status of the rest of the offers to REJECTED
+			// if an offer is ACCEPTED, auto change status of the rest of the offers from PENDING to REJECTED
 			if (offerStatus == 1) {
 				await model.offer.update(
 					{
@@ -189,6 +190,21 @@ module.exports = {
 				{
 					where: {
 						id: offerId,
+					},
+				}
+			);
+
+			// update product status to sold
+			await model.product.update(
+				{
+					soldTo: userId,
+					soldPrice: offer.price,
+					isSold: true,
+					soldAt: new Date(),
+				},
+				{
+					where: {
+						id: offer.productId,
 					},
 				}
 			);
