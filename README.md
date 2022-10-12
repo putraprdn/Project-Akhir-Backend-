@@ -1,6 +1,6 @@
 # FSW 10 - Kelompok 3: SecondHand (Backend)
 
-Repository ini ditujukan sebagai backend dari final project kelompok 3 dalam membuat e-commerce SecondHand [(lihat website di sini)](https://pa-be-k3.herokuapp.com/api/documentation/) menggunakan Express.js.  
+Repository ini ditujukan sebagai backend dari final project kelompok 3 dalam membuat e-commerce SecondHand [(lihat website di sini)](https://secondhand-fe-k3.herokuapp.com/) menggunakan Express.js.  
 Repository ini menggunakan MVC Pattern, yang artinya di dalam repository ini terdapat modul model, controller dan view.
 
 ## Getting Started
